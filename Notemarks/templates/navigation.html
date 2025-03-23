@@ -1,0 +1,87 @@
+<style>
+    .navpanel {
+        margin: 18px;
+        padding: 10px;
+        background-color: #2C2C2C;
+        width: fit-content;
+        display: flex;
+        flex-direction: column;
+        border-radius: 14px;
+    }
+
+    .navbutton {
+        background-color: #1C211C;
+        width: 43px;
+        height: 43px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        margin-top: 10px;
+        transition: 0.5s;
+    }
+
+    .navbutton:hover {
+        background-color: #121213;
+    }
+
+    .navcontainer {
+        display: flex;
+        align-items: center;
+        height: 100vh;
+        position: fixed;
+        z-index: 2; 
+    }
+
+    .backglow {
+        width: 100%;
+        height: 60px;
+        background-color: var(--accent);
+    }
+
+
+    .blurred-content {
+        filter: blur(90px);  
+        position: fixed;
+        top: -70px;
+        left: 0;
+        width: 100%;
+        height: 100vh; 
+        z-index: -1; 
+    }
+</style>
+
+{% load static %}
+
+<div class="blurred-content">
+    <div class="backglow"></div>
+</div>
+
+
+<div class="navcontainer">
+    <div class="navpanel">
+        <a href="/profile">
+            <div class="navbutton" style="margin-top: 0;">
+                <img src="{% static 'images/profileicon.svg' %}">
+            </div>
+        </a>
+
+        <a href="/profile">
+            <div class="navbutton">
+                <img src="{% static 'images/profileicon.svg' %}">
+            </div>
+        </a>
+
+        <a href="/profile">
+            <div class="navbutton">
+                <img src="{% static 'images/profileicon.svg' %}">
+            </div>
+        </a>
+
+        <a href="/profile">
+            <div class="navbutton">
+                <img src="{% static 'images/profileicon.svg' %}">
+            </div>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+    
+    <link rel="stylesheet" {% load static %} href="{% static 'css/styles.css' %}">
+
+    <style>
+        .bookcontainer {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            gap: 10px;  
+            justify-content: center; 
+            flex-wrap: wrap;
+        }
+
+        .centercontainer {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bookitem {
+            display: flex;
+            flex-direction: column;
+            width: 160px;
+            margin: 15px;
+        }
+
+        .booktitle {
+            color: var(--text);
+            font-size: x-large;
+            margin-bottom: 4px;
+        }
+
+        .bookauthor {
+            color: #6b6b6b;
+            font-size: larger;
+        }
+
+        .bookcover {
+            width: 160px;
+            height: 220px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 14px;
+            object-fit: cover;
+        }
+
+        .filtercontainer {
+            width: 100%;
+            margin-bottom: 22px;
+            margin-top: 150px;
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navigation.html' %}
+    <div class="centercontainer">
+
+        <div class="filtercontainer">
+        </div>
+
+        <div class="bookcontainer">
+
+
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+            <div class="bookitem">
+                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                <span class="booktitle">Make Today Count</span>
+                <span class="bookauthor">John C. Maxwell</span>
+            </div>
+
+
+
+
+        </div>
+    </div>
+    
+</body>
+</html>
