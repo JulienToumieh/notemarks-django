@@ -51,9 +51,23 @@
 
         .filtercontainer {
             width: 100%;
-            margin-bottom: 22px;
+            max-width: 1200px;
+            margin-bottom: 35px;
             margin-top: 150px;
             display: flex;
+        }
+
+        .searchinput {
+            width: 400px;
+            border-radius: 1000px;
+            background-color: #0000;
+            border-style: solid;
+            border-width: 3px;
+            border-color: var(--secondary);
+            color: #9fb7d6;
+            font-size: larger;
+            margin-left: 300px;
+            padding-left: 20px;
         }
     </style>
 </head>
@@ -62,6 +76,14 @@
     <div class="centercontainer">
 
         <div class="filtercontainer">
+            <button style="background-color: #0000; border-style: none;"><img class="icon" src="{% static 'images/sorticon1.svg' %}"></button>
+
+            <input type="text" class="searchinput"/>
+            <button style="background-color: #0000; border-style: none; margin-left: 16px;"><img class="icon" src="{% static 'images/searchicon.svg' %}"></button>
+     
+            <button style="background-color: #0000; border-style: none; margin-left: 270px;"><img class="icon" src="{% static 'images/addicon.svg' %}"></button>
+
+
         </div>
 
         <div class="bookcontainer">

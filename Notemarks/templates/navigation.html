@@ -49,6 +49,15 @@
         height: 100vh; 
         z-index: -1; 
     }
+
+    .navicon {
+        transition: 0.5s;
+    }
+
+    .navbutton:hover .navicon {
+        filter: hue-rotate(100deg) brightness(1.2);
+    }
+
 </style>
 
 {% load static %}
@@ -62,25 +71,25 @@
     <div class="navpanel">
         <a href="/profile">
             <div class="navbutton" style="margin-top: 0;">
-                <img src="{% static 'images/profileicon.svg' %}">
+                <img class="navicon" src="{% static 'images/profileicon.svg' %}">
             </div>
         </a>
 
-        <a href="/profile">
+        <a href="/home">
             <div class="navbutton">
-                <img src="{% static 'images/profileicon.svg' %}">
+                <img class="navicon" src="{% static 'images/dashboardicon.svg' %}">
             </div>
         </a>
 
-        <a href="/profile">
+        <a href="/books">
             <div class="navbutton">
-                <img src="{% static 'images/profileicon.svg' %}">
+                <img class="navicon" src="{% static 'images/bookicon.svg' %}">
             </div>
         </a>
 
-        <a href="/profile">
+        <a href="/bookmarks">
             <div class="navbutton">
-                <img src="{% static 'images/profileicon.svg' %}">
+                <img class="navicon" src="{% static 'images/bookmarkicon.svg' %}">
             </div>
         </a>
     </div>
