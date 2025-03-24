@@ -21,4 +21,5 @@ from Notemarks import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('books/',views.books, name='books'),
+    path('book/',views.book, name='book'),
 ]

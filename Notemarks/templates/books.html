@@ -52,8 +52,8 @@
         .filtercontainer {
             width: 100%;
             max-width: 1200px;
-            margin-bottom: 35px;
-            margin-top: 150px;
+            margin-bottom: 45px;
+            margin-top: 130px;
             display: flex;
         }
 
@@ -68,6 +68,10 @@
             font-size: larger;
             margin-left: 300px;
             padding-left: 20px;
+        }
+
+        a {
+            text-decoration: none;
         }
     </style>
 </head>
@@ -89,12 +93,14 @@
         <div class="bookcontainer">
 
 
-
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
+            <a href="/book">
+                <div class="bookitem">
+                    <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+                    <span class="booktitle">Make Today Count</span>
+                    <span class="bookauthor">John C. Maxwell</span>
+                </div>
+            </a>
+            
 
             <div class="bookitem">
                 <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
