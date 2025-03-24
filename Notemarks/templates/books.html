@@ -73,6 +73,44 @@
         a {
             text-decoration: none;
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0); /* Fallback for older browsers */
+            background-color: rgba(0,0,0,0.4); /* Black with transparency */
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #292020;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -85,14 +123,13 @@
             <input type="text" class="searchinput"/>
             <button style="background-color: #0000; border-style: none; margin-left: 16px;"><img class="icon" src="{% static 'images/searchicon.svg' %}"></button>
      
-            <button style="background-color: #0000; border-style: none; margin-left: 270px;"><img class="icon" src="{% static 'images/addicon.svg' %}"></button>
-
-
+            <!-- Add Book Button (to open modal) -->
+            <button id="addBookButton" style="background-color: #0000; border-style: none; margin-left: 270px;">
+                <img class="icon" src="{% static 'images/addicon.svg' %}">
+            </button>
         </div>
 
         <div class="bookcontainer">
-
-
             <a href="/book">
                 <div class="bookitem">
                     <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
@@ -100,91 +137,97 @@
                     <span class="bookauthor">John C. Maxwell</span>
                 </div>
             </a>
-            
 
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
+            {% for book in books %}
 
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
+            <a href="/book/{{ book.id }}">
+                <div class="bookitem">
+                    <img class="bookcover" src="{{ book.cover_image }}" alt="Cover of {{ book.title }}">
+                    <span class="booktitle">{{ book.title }}</span>
+                    <span class="bookauthor">{{ book.authors }}</span>
+                </div>
+            </a>
 
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
-
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
-
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
-
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
-
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
-
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
-
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
-
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
-
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
-
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
-
-            <div class="bookitem">
-                <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-            </div>
-
-
-
+            {% endfor %}
 
         </div>
     </div>
-    
+
+    <!-- The Modal for Adding a Book -->
+    <div id="addBookModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Add a New Book</h2>
+            <form method="POST" action="{% url 'add_book' %}">
+                {% csrf_token %}
+                <!-- Add your form fields here -->
+                <label for="title">Title:</label>
+                <input type="text" name="title" required><br>
+
+                <label for="authors">Authors:</label>
+                <input type="text" name="authors" required><br>
+
+                <label for="description">Description:</label>
+                <textarea name="description" required></textarea><br>
+
+                <label for="cover_image">Cover Image URL:</label>
+                <input type="url" name="cover_image" required><br>
+
+                <label for="pages">Pages:</label>
+                <input type="number" name="pages" required><br>
+
+                <label for="status">Status:</label>
+                <select name="status">
+                    <option value="unread">Unread</option>
+                    <option value="reading">Reading</option>
+                    <option value="finished">Finished</option>
+                    <option value="wont_finish">Won't Finish</option>
+                </select><br>
+
+                <label for="rating">Rating:</label>
+                <input type="number" name="rating" min="0" max="5" required><br>
+
+                <label for="favourite">Favourite:</label>
+                <input type="checkbox" name="favourite"><br>
+
+                <label for="categories">Categories:</label>
+                <select name="categories" multiple>
+                    <!-- Add your category options here -->
+                    <option value="1">Category 1</option>
+                    <option value="2">Category 2</option>
+                </select><br>
+
+                <button type="submit">Add Book</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("addBookModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("addBookButton");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementById("closeModal");
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>

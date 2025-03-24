@@ -118,11 +118,11 @@
   
         <div class="bookdescriptioncontainer">
 
-            <img class="bookcover" src="{% static 'images/examplebook.jpg' %}">
+            <img class="bookcover" src="{{ book.url }}">
             <div class="bookinfo">
-                <span class="booktitle">Make Today Count</span>
-                <span class="bookauthor">John C. Maxwell</span>
-                <span class="bookdescription">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</span>
+                <span class="booktitle">{{ book.title }}</span>
+                <span class="bookauthor">{{ book.authors }}</span>
+                <span class="bookdescription">{{ book.description }}</span>
             </div>
                 
             
@@ -151,7 +151,7 @@
 
                     <div style="display: flex; flex-direction: column;">
                         <span class="notemarktitle">Make Today Count</span>
-                        <span class="notemarktext">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</span>
+                        <span class="notemarktext">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</span>
                     </div>
                 </div>
 
@@ -160,7 +160,7 @@
 
                     <div style="display: flex; flex-direction: column;">
                         <span class="notemarktitle">Make Today Count</span>
-                        <span class="notemarktext">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</span>
+                        <span class="notemarktext">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</span>
                     </div>
                 </div>
 
@@ -169,7 +169,7 @@
 
                     <div style="display: flex; flex-direction: column;">
                         <span class="notemarktitle">Make Today Count</span>
-                        <span class="notemarktext">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</span>
+                        <span class="notemarktext">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</span>
                     </div>
                 </div>
 
