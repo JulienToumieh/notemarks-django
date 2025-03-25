@@ -4,9 +4,46 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .forms import BookForm
-from .models import Book
+from .models import Book, Notemark, Tag
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
+from .forms import NotemarkForm
+
+
+@login_required 
+def add_notemark(request):
+    if request.method == 'POST':
+        print(request.POST)  # Debugging: Check what data is being sent
+        form = NotemarkForm(request.POST)
+
+        if form.is_valid():
+            book_id = request.POST.get('book_id')
+            try:
+                book = Book.objects.get(id=book_id)
+            except Book.DoesNotExist:
+                print(f"Book with ID {book_id} does not exist.")  # Debugging
+                return render(request, 'book.html', {'form': form, 'tags': Tag.objects.all(), 'error': f"Book with ID {book_id} not found"})
+
+            # Save the Notemark
+            notemark = form.save(commit=False)
+            notemark.book = book  # Associate with book
+            notemark.save()
+
+            # Handle many-to-many field (tags)
+            tags = request.POST.getlist('tags')
+            notemark.tags.set(tags)  # Set the ManyToMany field properly
+
+            print("✅ Notemark successfully created!")  # Debugging confirmation
+
+            return redirect('book', id=book.id)
+        else:
+            print("❌ Form is not valid:", form.errors)  # Debugging line
+
+    else:
+        form = NotemarkForm()
+
+    return render(request, 'book.html', {'form': form, 'tags': Tag.objects.all()})
+
 
 @login_required  # Ensure the user is logged in
 def add_book(request):
@@ -61,13 +98,17 @@ def books(request):
 def book(request, id):
     # Get the book object by its ID or return a 404 if not found
     book = get_object_or_404(Book, id=id)
-    
+
+    # Get all notemarks related to the book by filtering on the book foreign key
+    notemarks = Notemark.objects.filter(book=book)
+
     context = {
         'book': book,
+        'notemarks': notemarks,  # Pass the notemarks to the template
         'MEDIA_URL_BASE': settings.MEDIA_URL_BASE,  # Pass the MEDIA_URL from settings
     }
 
-    # Pass the book object to the template
+    # Pass the book and notemarks to the template
     return render(request, 'book.html', context)
 
 

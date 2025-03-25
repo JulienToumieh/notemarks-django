@@ -1,6 +1,35 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-from .models import Book
+from .models import Book, Notemark
+
+
+class NotemarkForm(forms.ModelForm):
+    class Meta:
+        model = Notemark
+        fields = [
+            'title',
+            'chapter',
+            'page',
+            'color',
+            'favourite',
+            'tags',
+            'contents',
+            'book',  # Ensure the 'book' field is included
+        ]
+        widgets = {
+            'tags': forms.CheckboxSelectMultiple(),
+            'color': forms.TextInput(attrs={'type': 'color'}),
+        }
+
+    # Custom validation for 'page' field
+    def clean_page(self):
+        page = self.cleaned_data.get('page')
+        if page < 1:
+            raise forms.ValidationError("Page number must be at least 1.")
+        return page
+
+
+
 
 class BookForm(forms.ModelForm):
     class Meta:

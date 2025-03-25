@@ -12,7 +12,7 @@ def upload_cover_image(instance, filename):
 # Categories Model
 class Category(models.Model):
     name = models.CharField(max_length=255)
-    color = models.CharField(max_length=6)
+    color = models.CharField(max_length=7)
 
     def __str__(self):
         return self.name
@@ -20,7 +20,7 @@ class Category(models.Model):
 # Tags Model
 class Tag(models.Model):
     name = models.CharField(max_length=255)
-    color = models.CharField(max_length=6)
+    color = models.CharField(max_length=7)
 
     def __str__(self):
         return self.name
@@ -56,9 +56,11 @@ class Notemark(models.Model):
     title = models.CharField(max_length=255)
     chapter = models.CharField(max_length=255)
     page = models.IntegerField()
-    color = models.CharField(max_length=6)
+    color = models.CharField(max_length=7)
     favourite = models.BooleanField(default=False)
     tags = models.ManyToManyField(Tag, blank=True)  # Many-to-many relationship for tags
+    contents = models.CharField(max_length=32000, blank=True)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, blank=True, null=True) 
 
     def __str__(self):
         return self.title

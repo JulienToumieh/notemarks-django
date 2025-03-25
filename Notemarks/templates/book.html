@@ -109,13 +109,108 @@
             width: auto;
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0); /* Fallback for older browsers */
+            background-color: rgba(0,0,0,0.4); /* Black with transparency */
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #292020;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 12px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Form Styling for Modal */
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-field label {
+            color: var(--text);
+            font-size: large;
+        }
+
+        .form-field input,
+        .form-field textarea,
+        .form-field select {
+            width: 100%;
+            padding: 10px;
+            background-color: #0000;
+            border: 2px solid var(--secondary);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: large;
+        }
+
+        .form-field textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .form-field button {
+            background-color: var(--secondary);
+            color: white;
+            font-size: larger;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-field button:hover {
+            background-color: var(--secondary-dark);
+        }
+
+        /* Adjusted modal header */
+        h2 {
+            color: var(--text);
+            text-align: center;
+            font-size: xx-large;
+        }
     </style>
 </head>
 <body>
     {% include 'navigation.html' %}
     <div class="centercontainer">
 
-  
         <div class="bookdescriptioncontainer">
 
             <img class="bookcover" src="{{MEDIA_URL_BASE}}{{ book.cover_image }}">
@@ -125,9 +220,7 @@
                 <span class="bookdescription">{{ book.description }}</span>
             </div>
                 
-            
         </div>
-
 
         <span style="font-size: xx-large; margin-top: 50px; margin-bottom: 10px; width: 100%; max-width: 1180px;">Notemarks</span>
         
@@ -138,47 +231,125 @@
             <input type="text" class="searchinput"/>
             <button style="background-color: #0000; border-style: none; margin-left: 16px;"><img class="icon" src="{% static 'images/searchicon.svg' %}"></button>
      
-            <button style="background-color: #0000; border-style: none; margin-left: 270px;"><img class="icon" src="{% static 'images/addicon.svg' %}"></button>
+            <!-- Add Notemark Button (to open modal) -->
+            <button id="addNotemarkButton" data-book-id="{{ book.id }}" style="background-color: #0000; border-style: none; margin-left: 270px;">
+                <img class="icon" src="{% static 'images/addicon.svg' %}">
+            </button>
 
         </div>
 
         <div class="notemarkscontainer">
 
-            <div class="notemarkscontainer">
-
+            {% for notemark in notemarks %}
                 <div class="notemark" style="background-color: #08200B; display: flex; align-items: stretch;">
-                    <div style="background-color: #00ff22; width: 12px; margin-right:22px; border-radius: 100px;">&nbsp</div>
-
+                    <div style="background-color: {{ notemark.color }}; width: 12px; margin-right:22px; border-radius: 100px;">&nbsp</div>
                     <div style="display: flex; flex-direction: column;">
-                        <span class="notemarktitle">Make Today Count</span>
-                        <span class="notemarktext">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</span>
+                        <span class="notemarktitle">{{ notemark.title }}</span>
+                        <span class="notemarktext">{{ notemark.contents }}</span>
                     </div>
                 </div>
+            {% empty %}
+                <p>No notemarks for this book yet.</p>
+            {% endfor %}
 
-                <div class="notemark" style="background-color: #08200B; display: flex; align-items: stretch;">
-                    <div style="background-color: #00ff22; width: 12px; margin-right:22px; border-radius: 100px;">&nbsp</div>
 
-                    <div style="display: flex; flex-direction: column;">
-                        <span class="notemarktitle">Make Today Count</span>
-                        <span class="notemarktext">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</span>
-                    </div>
-                </div>
 
-                <div class="notemark" style="background-color: #08200B; display: flex; align-items: stretch;">
-                    <div style="background-color: #00ff22; width: 12px; margin-right:22px; border-radius: 100px;">&nbsp</div>
-
-                    <div style="display: flex; flex-direction: column;">
-                        <span class="notemarktitle">Make Today Count</span>
-                        <span class="notemarktext">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</span>
-                    </div>
-                </div>
-
-            </div>
+            <!-- Example Notemarks -->
+            
 
         </div>
 
-        
     </div>
+
+    <!-- The Modal for Adding a Notemark -->
+    <div id="addNotemarkModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Add a New Notemark</h2>
+            <form method="POST" action="{% url 'add_notemark' %}" class="modal-form">
+                {% csrf_token %}
+                
+                <div class="form-field">
+                    <label for="title">Title:</label>
+                    <input type="text" name="title" required>
+                </div>
+                
+                <div class="form-field">
+                    <label for="chapter">Chapter:</label>
+                    <input type="text" name="chapter">
+                </div>
+
+                <div class="form-field">
+                    <label for="contents">Contents:</label>
+                    <input type="text" name="contents">
+                </div>
+                
+                <div class="form-field">
+                    <label for="page">Page Number:</label>
+                    <input type="number" name="page" required>
+                </div>
+                
+                <div class="form-field">
+                    <label for="color">Color:</label>
+                    <input type="color" name="color" required>
+                </div>
+                
+                <div class="form-field">
+                    <label for="favourite">Favourite:</label>
+                    <input type="checkbox" name="favourite">
+                </div>
+                
+                <div class="form-field">
+                    <label for="tags">Tags:</label>
+                    <select name="tags" multiple>
+                        {% for tag in tags %}
+                            <option value="{{ tag.id }}">{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <input type="hidden" id="book_id_input" name="book_id" value="">
+                
+                <div class="form-field">
+                    <button type="submit">Add Notemark</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("addNotemarkModal");
+    
+        // Get the button that opens the modal
+        var btn = document.getElementById("addNotemarkButton");
+    
+        // Get the <span> element that closes the modal
+        var span = document.getElementById("closeModal");
+    
+        // Get the hidden input field for the book id
+        var bookIdInput = document.getElementById("book_id_input");
+    
+        // When the user clicks the button, open the modal and set the book ID
+        btn.onclick = function() {
+            var bookId = this.getAttribute("data-book-id");
+            bookIdInput.value = bookId;
+            console.log("Book ID:", bookId); // Debugging line
+            modal.style.display = "block";
+        }
+
+    
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+    
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
     
 </body>
 </html>
