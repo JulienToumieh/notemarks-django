@@ -1,21 +1,48 @@
+from django.conf import settings
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .forms import BookForm
 from .models import Book
+from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.decorators import login_required
 
-
+@login_required  # Ensure the user is logged in
 def add_book(request):
     if request.method == 'POST':
-        form = BookForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('success_url')  # Replace with the correct redirect URL after saving
-    else:
-        form = BookForm()
+        title = request.POST.get('title')
+        authors = request.POST.get('authors')
+        description = request.POST.get('description')
+        cover_image = request.FILES.get('cover_image')  # Handle file upload
+        cover_image_path = None
 
-    return render(request, 'books.html', {'form': form})
+        # Save the uploaded image to the MEDIA_ROOT directory
+        if cover_image:
+            fs = FileSystemStorage()
+            cover_image_path = fs.save(f'cover_images/{cover_image.name}', cover_image)
+
+        # Debugging: Print the values being used to create the book
+        print(f"Title: {title}, Authors: {authors}, Description: {description}, Cover Image: {cover_image_path}")
+
+        try:
+            # Create the book entry with the saved image path and user
+            book = Book.objects.create(
+                title=title,
+                authors=authors,
+                description=description,
+                cover_image=cover_image_path,  # Store only the relative path
+                user=request.user  # Associate the book with the logged-in user
+            )
+            print(f"Book Created: {book.title} by {book.authors}")  # Debugging message
+
+            # Success message
+            messages.success(request, f'Book "{book.title}" has been added successfully!')
+
+            return redirect('books')  # Adjust to your desired redirect
+        except Exception as e:
+            print(f"Error occurred: {str(e)}")  # Debugging message
+    return render(request, 'books.html')
 
 
 
@@ -23,16 +50,25 @@ def books(request):
     # Query all books
     books = Book.objects.all()
     
-    # Pass the books to the template
-    return render(request, 'books.html', {'books': books})
+    context = {
+        'books': books,
+        'MEDIA_URL_BASE': settings.MEDIA_URL_BASE,  # Pass the MEDIA_URL from settings
+    }
+    
+    return render(request, 'books.html', context)
 
 
 def book(request, id):
     # Get the book object by its ID or return a 404 if not found
     book = get_object_or_404(Book, id=id)
     
+    context = {
+        'book': book,
+        'MEDIA_URL_BASE': settings.MEDIA_URL_BASE,  # Pass the MEDIA_URL from settings
+    }
+
     # Pass the book object to the template
-    return render(request, 'book.html', {'book': book})
+    return render(request, 'book.html', context)
 
 
 
@@ -43,7 +79,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('home')  # Replace 'home' with your desired redirect target
+            return redirect('books')  # Replace 'home' with your desired redirect target
         else:
             messages.error(request, "Invalid username or password.")
     else:

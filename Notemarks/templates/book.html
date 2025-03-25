@@ -118,7 +118,7 @@
   
         <div class="bookdescriptioncontainer">
 
-            <img class="bookcover" src="{{ book.url }}">
+            <img class="bookcover" src="{{MEDIA_URL_BASE}}{{ book.cover_image }}">
             <div class="bookinfo">
                 <span class="booktitle">{{ book.title }}</span>
                 <span class="bookauthor">{{ book.authors }}</span>

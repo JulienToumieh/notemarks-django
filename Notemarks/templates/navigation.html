@@ -66,7 +66,16 @@
     <div class="backglow"></div>
 </div>
 
-<img style="position: absolute; top: 30px; left: 50px;" src="{% static 'images/logo.svg' %}">
+<img style="position: absolute; top: 30px; left: 50px;" src="{% static 'images/logo.svg' %}">{% if user.is_authenticated %}
+
+<li>
+    <img src="{% static 'images/profileicon.svg' %}" alt="User Icon" />
+    <span>{{ user.username }}</span>  <!-- Optionally show the user's username -->
+</li>
+{% else %}
+
+<li><a href="{% url 'login' %}">Login</a></li>
+{% endif %}
 
 <div class="navcontainer">
     <div class="navpanel">
