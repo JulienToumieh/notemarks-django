@@ -8,6 +8,7 @@ from .models import Book, Notemark, Tag
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
 from .forms import NotemarkForm
+from django.db.models import Q
 
 
 @login_required 
@@ -33,11 +34,11 @@ def add_notemark(request):
             tags = request.POST.getlist('tags')
             notemark.tags.set(tags)  # Set the ManyToMany field properly
 
-            print("✅ Notemark successfully created!")  # Debugging confirmation
+            print("Notemark successfully created!")  # Debugging confirmation
 
             return redirect('book', id=book.id)
         else:
-            print("❌ Form is not valid:", form.errors)  # Debugging line
+            print("Form is not valid:", form.errors)  # Debugging line
 
     else:
         form = NotemarkForm()
@@ -118,9 +119,16 @@ def delete_book(request, book_id):
     return redirect('books')
 
 def books(request):
-    # Query all books
-    books = Book.objects.all()
-    
+    search_term = request.GET.get('search', '')  # Get the search term from the query string
+    if search_term:
+        # Filter books by title or authors containing the search term
+        books = Book.objects.filter(
+            Q(title__icontains=search_term) | Q(authors__icontains=search_term)
+        )
+    else:
+        # If no search term, return all books
+        books = Book.objects.all()
+
     context = {
         'books': books,
         'MEDIA_URL_BASE': settings.MEDIA_URL_BASE,  # Pass the MEDIA_URL from settings
@@ -129,16 +137,28 @@ def books(request):
     return render(request, 'books.html', context)
 
 
+@login_required
 def book(request, id):
     # Get the book object by its ID or return a 404 if not found
     book = get_object_or_404(Book, id=id)
 
-    # Get all notemarks related to the book by filtering on the book foreign key
-    notemarks = Notemark.objects.filter(book=book)
+    # Get the search term for notemarks from the query string
+    search_term = request.GET.get('search', '')
+
+    # Filter notemarks based on title or contents if a search term is provided
+    if search_term:
+        notemarks = Notemark.objects.filter(
+            book=book
+        ).filter(
+            Q(title__icontains=search_term) | Q(contents__icontains=search_term)
+        )
+    else:
+        # If no search term, fetch all notemarks for the book
+        notemarks = Notemark.objects.filter(book=book)
 
     context = {
         'book': book,
-        'notemarks': notemarks,  # Pass the notemarks to the template
+        'notemarks': notemarks,  # Pass the filtered notemarks to the template
         'MEDIA_URL_BASE': settings.MEDIA_URL_BASE,  # Pass the MEDIA_URL from settings
     }
 

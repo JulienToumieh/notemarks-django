@@ -177,11 +177,18 @@
     <div class="centercontainer">
 
         <div class="filtercontainer">
-            <button style="background-color: #0000; border-style: none;"><img class="icon" src="{% static 'images/sorticon1.svg' %}"></button>
-
-            <input type="text" class="searchinput"/>
-            <button style="background-color: #0000; border-style: none; margin-left: 16px;"><img class="icon" src="{% static 'images/searchicon.svg' %}"></button>
-     
+            <button style="background-color: #0000; border-style: none;">
+                <img class="icon" src="{% static 'images/sorticon1.svg' %}">
+            </button>
+        
+            <!-- Search Form -->
+            <form method="get" action="{% url 'books' %}">
+                <input type="text" name="search" class="searchinput" value="{{ search_query }}" placeholder="Search by title or author">
+                <button type="submit" style="background-color: #0000; border-style: none; margin-left: 16px;">
+                    <img class="icon" src="{% static 'images/searchicon.svg' %}">
+                </button>
+            </form>
+             
             <!-- Add Book Button (to open modal) -->
             <button id="addBookButton" style="background-color: #0000; border-style: none; margin-left: 270px;">
                 <img class="icon" src="{% static 'images/addicon.svg' %}">

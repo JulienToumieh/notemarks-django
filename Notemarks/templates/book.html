@@ -234,19 +234,25 @@
 
         <span style="font-size: xx-large; margin-top: 50px; margin-bottom: 10px; width: 100%; max-width: 1180px;">Notemarks</span>
         
-        <div class="filtercontainer">
-            
-            <button style="background-color: #0000; border-style: none;"><img class="icon" src="{% static 'images/sorticon1.svg' %}"></button>
+        <form method="GET" action="{% url 'book' book.id %}">
+            <div class="filtercontainer">
+                
+                <button style="background-color: #0000; border-style: none;"><img class="icon" src="{% static 'images/sorticon1.svg' %}"></button>
 
-            <input type="text" class="searchinput"/>
-            <button style="background-color: #0000; border-style: none; margin-left: 16px;"><img class="icon" src="{% static 'images/searchicon.svg' %}"></button>
-     
-            <!-- Add Notemark Button (to open modal) -->
-            <button id="addNotemarkButton" data-book-id="{{ book.id }}" style="background-color: #0000; border-style: none; margin-left: 270px;">
-                <img class="icon" src="{% static 'images/addicon.svg' %}">
-            </button>
+                <input type="text" class="searchinput" name="search" value="{{ request.GET.search }}" placeholder="Search Notemarks"/>
+                <button type="submit" style="background-color: #0000; border-style: none; margin-left: 16px;">
+                    <img class="icon" src="{% static 'images/searchicon.svg' %}">
+                </button>
 
-        </div>
+                <!-- Add Notemark Button (to open modal) -->
+                <button id="addNotemarkButton" data-book-id="{{ book.id }}" style="background-color: #0000; border-style: none; margin-left: 270px;">
+                    <img class="icon" src="{% static 'images/addicon.svg' %}">
+                </button>
+
+            </div>
+        </form>
+
+
 
         <div class="notemarkscontainer">
 
