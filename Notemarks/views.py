@@ -44,6 +44,24 @@ def add_notemark(request):
 
     return render(request, 'book.html', {'form': form, 'tags': Tag.objects.all()})
 
+@login_required
+def delete_notemark(request, notemark_id):
+    # Get the notemark by ID
+    notemark = get_object_or_404(Notemark, id=notemark_id)
+    
+    # Check if the logged-in user is the one who added the notemark (optional)
+    if notemark.book.user != request.user:
+        # Redirect to a page with an error message (optional)
+        messages.error(request, "You don't have permission to delete this notemark.")
+        return redirect('book', id=notemark.book.id)
+
+    # Delete the notemark
+    notemark.delete()
+
+    # Redirect to the book page after deletion
+    messages.success(request, "Notemark deleted successfully!")
+    return redirect('book', id=notemark.book.id)
+
 
 @login_required  # Ensure the user is logged in
 def add_book(request):
@@ -81,7 +99,23 @@ def add_book(request):
             print(f"Error occurred: {str(e)}")  # Debugging message
     return render(request, 'books.html')
 
+@login_required
+def delete_book(request, book_id):
+    # Get the book by ID
+    book = get_object_or_404(Book, id=book_id)
+    
+    # Check if the logged-in user is the one who added the book (optional)
+    if book.user != request.user:
+        # Redirect to a page with an error message (optional)
+        messages.error(request, "You don't have permission to delete this book.")
+        return redirect('books')
 
+    # Delete the book
+    book.delete()
+
+    # Redirect to a page (books list or wherever you want after deletion)
+    messages.success(request, "Book deleted successfully!")
+    return redirect('books')
 
 def books(request):
     # Query all books

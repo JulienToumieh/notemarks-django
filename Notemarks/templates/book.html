@@ -218,6 +218,16 @@
                 <span class="booktitle">{{ book.title }}</span>
                 <span class="bookauthor">{{ book.authors }}</span>
                 <span class="bookdescription">{{ book.description }}</span>
+                <div style="width: 100%;">
+                    <!-- Delete Form -->
+                    <form action="{% url 'delete_book' book.id %}" method="POST" style="float: right;">
+                        {% csrf_token %}
+                        <button type="submit" style="background-color: #0000; border-style: none;" class="btn btn-danger">
+                            <img class="icon" src="{% static 'images/trashicon.svg' %}" alt="Delete">
+                            Delete
+                        </button>
+                    </form>
+                </div>
             </div>
                 
         </div>
@@ -241,21 +251,28 @@
         <div class="notemarkscontainer">
 
             {% for notemark in notemarks %}
-                <div class="notemark" style="background-color: #08200B; display: flex; align-items: stretch;">
+                <div class="notemark" style="background-color: {{ notemark.color }}13; display: flex; align-items: stretch;">
                     <div style="background-color: {{ notemark.color }}; width: 12px; margin-right:22px; border-radius: 100px;">&nbsp</div>
-                    <div style="display: flex; flex-direction: column;">
+                    <div style="display: flex; flex-direction: column; width: 100%;">
                         <span class="notemarktitle">{{ notemark.title }}</span>
                         <span class="notemarktext">{{ notemark.contents }}</span>
+                        <div style="width: 100%;">
+                            <!-- Delete Form for Notemarks -->
+                            <form action="{% url 'delete_notemark' notemark.id %}" method="POST" style="float: right;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger" style="background: transparent; border: none;">
+                                    <img class="icon" src="{% static 'images/trashicon.svg' %}" alt="Delete">
+                                </button>
+                            </form>
+                        </div>
                     </div>
+
+                    
                 </div>
             {% empty %}
                 <p>No notemarks for this book yet.</p>
             {% endfor %}
 
-
-
-            <!-- Example Notemarks -->
-            
 
         </div>
 
