@@ -29,6 +29,8 @@ urlpatterns = [
     path('add_notemark/', views.add_notemark, name='add_notemark'),
     path('delete_book/<int:book_id>/', views.delete_book, name='delete_book'),
     path('delete_notemark/<int:notemark_id>/', views.delete_notemark, name='delete_notemark'),
+    path('add_category/', views.add_category, name='add_category'),
+    path('book/<int:book_id>/edit/', views.edit_book, name='edit_book'),
 ]
 
 if settings.DEBUG:

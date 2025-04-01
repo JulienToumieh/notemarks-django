@@ -224,9 +224,14 @@
                         {% csrf_token %}
                         <button type="submit" style="background-color: #0000; border-style: none;" class="btn btn-danger">
                             <img class="icon" src="{% static 'images/trashicon.svg' %}" alt="Delete">
-                            Delete
+                           
                         </button>
                     </form>
+
+                    <button style="background-color: #0000; border-style: none;" class="btn btn-danger">
+                        <img class="icon" src="{% static 'images/editicon.svg' %}" alt="Edit">
+                        
+                    </button>
                 </div>
             </div>
                 
@@ -234,15 +239,17 @@
 
         <span style="font-size: xx-large; margin-top: 50px; margin-bottom: 10px; width: 100%; max-width: 1180px;">Notemarks</span>
         
-        <form method="GET" action="{% url 'book' book.id %}">
+        
             <div class="filtercontainer">
                 
                 <button style="background-color: #0000; border-style: none;"><img class="icon" src="{% static 'images/sorticon1.svg' %}"></button>
 
-                <input type="text" class="searchinput" name="search" value="{{ request.GET.search }}" placeholder="Search Notemarks"/>
-                <button type="submit" style="background-color: #0000; border-style: none; margin-left: 16px;">
-                    <img class="icon" src="{% static 'images/searchicon.svg' %}">
-                </button>
+                <form method="GET" action="{% url 'book' book.id %}">
+                    <input type="text" class="searchinput" name="search" value="{{ request.GET.search }}" placeholder="Search Notemarks"/>
+                    <button type="submit" style="background-color: #0000; border-style: none; margin-left: 16px;">
+                        <img class="icon" src="{% static 'images/searchicon.svg' %}">
+                    </button>
+                </form>
 
                 <!-- Add Notemark Button (to open modal) -->
                 <button id="addNotemarkButton" data-book-id="{{ book.id }}" style="background-color: #0000; border-style: none; margin-left: 270px;">
@@ -250,8 +257,7 @@
                 </button>
 
             </div>
-        </form>
-
+        
 
 
         <div class="notemarkscontainer">
@@ -283,6 +289,45 @@
         </div>
 
     </div>
+
+
+    <!-- The Modal for Editing a Book -->
+<div id="editBookModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeEditModal">&times;</span>
+        <h2>Edit Book Details</h2>
+        <form method="POST" action="{% url 'edit_book' book.id %}" enctype="multipart/form-data" class="modal-form">
+            {% csrf_token %}
+            
+            <div class="form-field">
+                <label for="title">Title:</label>
+                <input type="text" name="title" id="edit-title" value="{{ book.title }}" required>
+            </div>
+            
+            <div class="form-field">
+                <label for="authors">Authors:</label>
+                <input type="text" name="authors" id="edit-authors" value="{{ book.authors }}" required>
+            </div>
+
+            <div class="form-field">
+                <label for="description">Description:</label>
+                <textarea name="description" id="edit-description" required>{{ book.description }}</textarea>
+            </div>
+            
+            <div class="form-field">
+                <label for="cover_image">Cover Image:</label>
+                <input type="file" name="cover_image" id="edit-cover_image">
+                <img id="current-cover-image" src="{{ MEDIA_URL_BASE }}{{ book.cover_image }}" alt="Current Cover" style="max-width: 100px; margin-top: 10px;">
+            </div>
+
+            
+            <div class="form-field">
+                <button type="submit">Update Book</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
     <!-- The Modal for Adding a Notemark -->
     <div id="addNotemarkModal" class="modal">
@@ -372,6 +417,48 @@
                 modal.style.display = "none";
             }
         }
+
+
+
+        // Get the modal
+        var editModal = document.getElementById("editBookModal");
+
+        // Get the button that opens the modal
+        var editBtn = document.querySelector(".btn.btn-danger img[alt='Edit']");
+
+        // Get the <span> element that closes the modal
+        var closeEditModal = document.getElementById("closeEditModal");
+
+        // When the user clicks the "Edit" button, open the modal and set the book's current details
+        editBtn.onclick = function() {
+            var bookTitle = "{{ book.title }}";
+            var bookAuthors = "{{ book.authors }}";
+            var bookDescription = "{{ book.description }}";
+            var bookCoverImage = "{{ MEDIA_URL_BASE }}{{ book.cover_image }}";
+            
+            // Fill the form inputs with current data
+            document.getElementById("edit-title").value = bookTitle;
+            document.getElementById("edit-authors").value = bookAuthors;
+            document.getElementById("edit-description").value = bookDescription;
+            document.getElementById("current-cover-image").src = bookCoverImage;
+            
+            // Open the modal
+            editModal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        closeEditModal.onclick = function() {
+            editModal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == editModal) {
+                editModal.style.display = "none";
+            }
+        }
+
+
     </script>
     
 </body>

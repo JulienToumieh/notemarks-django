@@ -50,9 +50,10 @@ class BookForm(forms.ModelForm):
     # You can add custom validation here if needed
     def clean_rating(self):
         rating = self.cleaned_data.get('rating')
-        if rating < 0 or rating > 5:
+        if rating is not None and (rating < 0 or rating > 5):
             raise forms.ValidationError("Rating must be between 0 and 5.")
         return rating
+
 
 
 

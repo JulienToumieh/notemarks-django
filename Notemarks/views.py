@@ -9,7 +9,24 @@ from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
 from .forms import NotemarkForm
 from django.db.models import Q
+from .models import Category
+from django.contrib import messages
 
+@login_required
+def add_category(request):
+    if request.method == 'POST':
+        category_name = request.POST.get('category_name')
+        category_color = request.POST.get('category_color')
+
+        # Create and save the new category
+        category = Category.objects.create(name=category_name, color=category_color)
+
+        # Success message
+        messages.success(request, f'Category "{category.name}" created successfully!')
+
+        return redirect('books')  # Adjust to redirect to the appropriate page (e.g., books list)
+
+    return redirect('books')  # Handle case for non-POST requests
 
 @login_required 
 def add_notemark(request):
@@ -78,8 +95,13 @@ def add_book(request):
             fs = FileSystemStorage()
             cover_image_path = fs.save(f'cover_images/{cover_image.name}', cover_image)
 
+        # Get the selected categories from the POST data (assuming you have checkboxes for categories)
+        category_ids = request.POST.getlist('categories')  # Get a list of selected category IDs
+        categories = Category.objects.filter(id__in=category_ids)  # Get the Category objects
+
         # Debugging: Print the values being used to create the book
         print(f"Title: {title}, Authors: {authors}, Description: {description}, Cover Image: {cover_image_path}")
+        print(f"Selected Categories: {categories}")
 
         try:
             # Create the book entry with the saved image path and user
@@ -90,6 +112,10 @@ def add_book(request):
                 cover_image=cover_image_path,  # Store only the relative path
                 user=request.user  # Associate the book with the logged-in user
             )
+
+            # Associate the selected categories with the book (ManyToManyField)
+            book.categories.set(categories)  # Use set to properly associate categories
+
             print(f"Book Created: {book.title} by {book.authors}")  # Debugging message
 
             # Success message
@@ -98,7 +124,10 @@ def add_book(request):
             return redirect('books')  # Adjust to your desired redirect
         except Exception as e:
             print(f"Error occurred: {str(e)}")  # Debugging message
-    return render(request, 'books.html')
+
+    # Render the form, passing categories to the template for selection
+    categories = Category.objects.all()
+    return render(request, 'books.html', {'categories': categories})
 
 @login_required
 def delete_book(request, book_id):
@@ -119,6 +148,7 @@ def delete_book(request, book_id):
     return redirect('books')
 
 def books(request):
+    categories = Category.objects.all()  # Get all categories
     search_term = request.GET.get('search', '')  # Get the search term from the query string
     if search_term:
         # Filter books by title or authors containing the search term
@@ -131,6 +161,7 @@ def books(request):
 
     context = {
         'books': books,
+        'categories': categories,
         'MEDIA_URL_BASE': settings.MEDIA_URL_BASE,  # Pass the MEDIA_URL from settings
     }
     
@@ -181,3 +212,31 @@ def login_view(request):
         form = AuthenticationForm()
     
     return render(request, 'login.html', {'form': form})
+
+
+@login_required
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id, user=request.user)
+    
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        authors = request.POST.get('authors')
+        description = request.POST.get('description')
+        cover_image = request.FILES.get('cover_image')  # Handle file upload
+
+        # Update the book instance
+        book.title = title
+        book.authors = authors
+        book.description = description
+        
+        if cover_image:
+            fs = FileSystemStorage()
+            cover_image_path = fs.save(f'cover_images/{cover_image.name}', cover_image)
+            book.cover_image = cover_image_path
+        
+        book.save()
+        
+        messages.success(request, 'Book details updated successfully!')
+        return redirect('book', id=book_id)
+
+    return render(request, 'edit_book.html', {'book': book})

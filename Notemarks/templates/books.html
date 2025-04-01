@@ -170,11 +170,69 @@
             text-align: center;
             font-size: xx-large;
         }
+
+        .chip {
+           border-radius: 10px;
+           border-width: 4px;
+           color: aliceblue;
+           font-size: large;
+           height: 24px;
+           min-width: 30px;
+           padding: 8px;
+           border-style: solid;
+           display: flex;
+           margin: 4px;
+           text-align: center;
+           justify-content: center;
+        }
+
+        .addchip {
+           border-radius: 10px;
+           color: aliceblue;
+           font-size: large;
+           height: 24px;
+           min-width: 30px;
+           padding: 8px;
+           border-style: none;
+           display: flex;
+           margin: 4px;
+           text-align: center;
+           justify-content: center;
+        }
+
+        .chipbtn {
+            background-color: #0000;
+            border-style: none;
+        }
+
+        .chipcontainer {
+            display: flex;
+            justify-content: center;
+        }
+
     </style>
 </head>
 <body>
     {% include 'navigation.html' %}
     <div class="centercontainer">
+
+
+        <div class="chipcontainer">
+
+            {% for category in categories %}
+                <div class="chip" style="border-color: {{ category.color }}; background-color: {{ category.color }}13;">
+                    {{ category.name }}
+                </div>
+            {% endfor %}
+
+
+            <button id="openCategoryModalButton" style="background-color: #0000; border-style: none;">
+                <div class="addchip" style="border-color: #45f8d1; background-color: #45f8d113;">
+                    <img class="icon" src="{% static 'images/addicon.svg' %}">
+                </div>
+            </button>
+            
+        </div>
 
         <div class="filtercontainer">
             <button style="background-color: #0000; border-style: none;">
@@ -219,101 +277,161 @@
         </div>
     </div>
 
-    <!-- The Modal for Adding a Book -->
     <div id="addBookModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeModal">&times;</span>
             <h2>Add a New Book</h2>
             <form method="POST" action="{% url 'add_book' %}" enctype="multipart/form-data" class="modal-form">
                 {% csrf_token %}
-                <!-- Form fields for title, authors, etc. -->
+    
+                <!-- Book Title -->
                 <div class="form-field">
                     <label for="title">Title:</label>
-                    <input type="text" name="title" required>
+                    <input type="text" name="title" id="title" required>
                 </div>
-            
+    
+                <!-- Authors -->
                 <div class="form-field">
                     <label for="authors">Authors:</label>
-                    <input type="text" name="authors" required>
+                    <input type="text" name="authors" id="authors" required>
                 </div>
-            
+    
+                <!-- Description -->
                 <div class="form-field">
                     <label for="description">Description:</label>
-                    <textarea name="description"></textarea>
+                    <textarea name="description" id="description"></textarea>
                 </div>
-            
+    
+                <!-- Cover Image -->
                 <div class="form-field">
                     <label for="cover_image">Cover Image:</label>
-                    <input type="file" name="cover_image" required>
+                    <input type="file" name="cover_image" id="cover_image" required>
                 </div>
-            
+    
+                <!-- Number of Pages -->
                 <div class="form-field">
                     <label for="pages">Pages:</label>
-                    <input type="number" name="pages" required>
+                    <input type="number" name="pages" id="pages" required>
                 </div>
-            
+    
+                <!-- Status -->
                 <div class="form-field">
                     <label for="status">Status:</label>
-                    <select name="status">
+                    <select name="status" id="status">
                         <option value="unread">Unread</option>
                         <option value="reading">Reading</option>
                         <option value="finished">Finished</option>
                         <option value="wont_finish">Won't Finish</option>
                     </select>
                 </div>
-            
+    
+                <!-- Rating -->
                 <div class="form-field">
                     <label for="rating">Rating:</label>
-                    <input type="number" name="rating" min="0" max="5">
+                    <input type="number" name="rating" id="rating" min="0" max="5">
                 </div>
-            
+    
+                <!-- Favourite -->
                 <div class="form-field">
                     <label for="favourite">Favourite:</label>
-                    <input type="checkbox" name="favourite">
+                    <input type="checkbox" name="favourite" id="favourite">
                 </div>
-            
+    
+                <!-- Categories -->
                 <div class="form-field">
                     <label for="categories">Categories:</label>
-                    <select name="categories" multiple>
-                        <!-- Add your category options here -->
-                        <option value="1">Category 1</option>
-                        <option value="2">Category 2</option>
+                    <select name="categories" id="categories" multiple>
+                        <!-- Dynamic category options go here -->
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
-            
+    
+                <!-- Buttons to Add Book and Create New Category -->
                 <div class="form-field">
                     <button type="submit">Add Book</button>
+                    <button type="button" id="addCategoryButton">Add New Category</button>
                 </div>
             </form>
         </div>
     </div>
+    
 
+        <!-- Modal for Creating Category -->
+        <div id="addCategoryModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeCategoryModal">&times;</span>
+                <h2>Create New Category</h2>
+                <form method="POST" action="{% url 'add_category' %}" class="modal-form">
+                    {% csrf_token %}
+                    <div class="form-field">
+                        <label for="category_name">Category Name:</label>
+                        <input type="text" name="category_name" required>
+                    </div>
+    
+                    <div class="form-field">
+                        <label for="category_color">Category Color:</label>
+                        <input type="color" name="category_color" required>
+                    </div>
+    
+                    <div class="form-field">
+                        <button type="submit">Create Category</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    
+    <!-- JavaScript to Handle Modals -->
     <script>
-        // Get the modal
-        var modal = document.getElementById("addBookModal");
+        // Modal for Adding Book
+    var bookModal = document.getElementById("addBookModal");
+    var closeModal = document.getElementById("closeModal");
+    var addBookButton = document.getElementById("addBookButton");
 
-        // Get the button that opens the modal
-        var btn = document.getElementById("addBookButton");
+    // Modal for Adding Category
+    var categoryModal = document.getElementById("addCategoryModal");
+    var closeCategoryModal = document.getElementById("closeCategoryModal");
+    var addCategoryButton = document.getElementById("addCategoryButton");
+    var openCategoryModalButton = document.getElementById("openCategoryModalButton");
 
-        // Get the <span> element that closes the modal
-        var span = document.getElementById("closeModal");
+    // Open Book Modal
+    addBookButton.onclick = function() {
+        bookModal.style.display = "block";
+    }
 
-        // When the user clicks the button, open the modal
-        btn.onclick = function() {
-            modal.style.display = "block";
+    // Close Book Modal
+    closeModal.onclick = function() {
+        bookModal.style.display = "none";
+    }
+
+    // Open Category Modal (Two buttons)
+    addCategoryButton.onclick = function() {
+        categoryModal.style.display = "block";
+    }
+
+    openCategoryModalButton.onclick = function() {
+        categoryModal.style.display = "block";
+    }
+
+    // Close Category Modal
+    closeCategoryModal.onclick = function() {
+        categoryModal.style.display = "none";
+    }
+
+    // Combined window.onclick for both modals
+    window.onclick = function(event) {
+        if (event.target == bookModal) {
+            bookModal.style.display = "none";
         }
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-            modal.style.display = "none";
+        if (event.target == categoryModal) {
+            categoryModal.style.display = "none";
         }
+    }
 
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
     </script>
+
+
+
 </body>
 </html>
