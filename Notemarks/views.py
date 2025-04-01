@@ -172,7 +172,7 @@ def books(request):
 def book(request, id):
     # Get the book object by its ID or return a 404 if not found
     book = get_object_or_404(Book, id=id)
-
+    tags = Tag.objects.all()
     # Get the search term for notemarks from the query string
     search_term = request.GET.get('search', '')
 
@@ -191,6 +191,7 @@ def book(request, id):
         'book': book,
         'notemarks': notemarks,  # Pass the filtered notemarks to the template
         'MEDIA_URL_BASE': settings.MEDIA_URL_BASE,  # Pass the MEDIA_URL from settings
+        'tags': tags
     }
 
     # Pass the book and notemarks to the template

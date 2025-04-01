@@ -109,101 +109,19 @@
             width: auto;
         }
 
-        /* Modal Styles */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0); /* Fallback for older browsers */
-            background-color: rgba(0,0,0,0.4); /* Black with transparency */
-            padding-top: 60px;
-        }
-
-        .modal-content {
-            background-color: #292020;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 12px;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        /* Form Styling for Modal */
-        .modal-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .form-field {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .form-field label {
-            color: var(--text);
-            font-size: large;
-        }
-
-        .form-field input,
-        .form-field textarea,
-        .form-field select {
-            width: 100%;
-            padding: 10px;
-            background-color: #0000;
-            border: 2px solid var(--secondary);
-            border-radius: 12px;
-            color: var(--text);
-            font-size: large;
-        }
-
-        .form-field textarea {
-            resize: vertical;
-            height: 100px;
-        }
-
-        .form-field button {
-            background-color: var(--secondary);
-            color: white;
-            font-size: larger;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: background-color 0.3s ease;
-        }
-
-        .form-field button:hover {
-            background-color: var(--secondary-dark);
-        }
-
+        
         /* Adjusted modal header */
         h2 {
             color: var(--text);
             text-align: center;
             font-size: xx-large;
+        }
+
+        
+        form {
+            padding: 0px;
+            margin: 0px;
+            width: fit-content;
         }
     </style>
 </head>
