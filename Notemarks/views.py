@@ -196,7 +196,39 @@ def book(request, id):
     # Pass the book and notemarks to the template
     return render(request, 'book.html', context)
 
+@login_required
+def notemarks(request):
 
+    tags = Tag.objects.all()
+
+    search_term = request.GET.get('search', '')  # Get the search term from the query string
+    if search_term:
+        # Filter books by title or authors containing the search term
+        notemarks = Notemark.objects.filter(
+            Q(title__icontains=search_term) | Q(contents__icontains=search_term)
+        )
+    else:
+        # If no search term, return all books
+        notemarks = Notemark.objects.all()
+
+    return render(request, 'notemarks.html', {'notemarks': notemarks, 'tags': tags})
+
+
+@login_required
+def add_tag(request):
+    if request.method == 'POST':
+        tag_name = request.POST.get('tag_name')
+        tag_color = request.POST.get('tag_color')
+
+        # Create and save the new category
+        tag = Tag.objects.create(name=tag_name, color=tag_color)
+
+        # Success message
+        messages.success(request, f'Tag "{tag.name}" created successfully!')
+
+        return redirect('notemarks')  # Adjust to redirect to the appropriate page (e.g., books list)
+
+    return redirect('notemarks')  # Handle case for non-POST requests
 
 
 def login_view(request):

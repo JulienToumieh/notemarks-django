@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book</title>
+    
+    <link rel="stylesheet" {% load static %} href="{% static 'css/styles.css' %}">
+
+    <style>
+        .bookdescriptioncontainer {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            gap: 10px;  
+            justify-content: center; 
+            flex-wrap: wrap;
+            margin-top: 130px;
+        }
+
+        .notemarkscontainer {
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 120px;
+        }
+
+        .centercontainer {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .booktitle {
+            color: var(--text);
+            font-size: xx-large;
+            margin-bottom: 4px;
+        }
+
+        .bookauthor {
+            color: #6b6b6b;
+            font-size: x-large;
+            margin-bottom: 32px;
+        }
+
+        .bookdescription {
+            color: #6b6b6b;
+            font-size: larger;
+            width: 800px;
+        }
+
+        .bookcover {
+            width: 310px;
+            height: 426px;
+            border-radius: 0 14px 14px 0;
+            margin-bottom: 14px;
+            margin-right: 30px;
+            object-fit: cover;
+        }
+
+        .filtercontainer {
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 45px;
+            margin-top: 10px;
+            display: flex;
+        }
+
+        .searchinput {
+            width: 400px;
+            border-radius: 1000px;
+            background-color: #0000;
+            border-style: solid;
+            border-width: 3px;
+            border-color: var(--secondary);
+            color: #9fb7d6;
+            font-size: larger;
+            margin-left: 300px;
+            padding-left: 20px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .bookinfo {
+            display: flex;
+            flex-direction: column;
+            max-width: 760px;
+            justify-content: center;
+        }
+
+        .notemark {
+            width: 100%;
+            padding: 20px;
+            border-radius: 16px;
+            height: fit-content;
+            margin-bottom: 32px;
+        }
+
+        .notemarktitle {
+            color: var(--text);
+            font-size: xx-large;
+            margin-bottom: 14px;
+        }
+
+        .notemarktext {
+            color: #6b6b6b;
+            font-size: x-large;
+            width: auto;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0); /* Fallback for older browsers */
+            background-color: rgba(0,0,0,0.4); /* Black with transparency */
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #292020;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 12px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Form Styling for Modal */
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-field label {
+            color: var(--text);
+            font-size: large;
+        }
+
+        .form-field input,
+        .form-field textarea,
+        .form-field select {
+            width: 100%;
+            padding: 10px;
+            background-color: #0000;
+            border: 2px solid var(--secondary);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: large;
+        }
+
+        .form-field textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .form-field button {
+            background-color: var(--secondary);
+            color: white;
+            font-size: larger;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-field button:hover {
+            background-color: var(--secondary-dark);
+        }
+
+        /* Adjusted modal header */
+        h2 {
+            color: var(--text);
+            text-align: center;
+            font-size: xx-large;
+        }
+
+        .chip {
+           border-radius: 10px;
+           border-width: 4px;
+           color: aliceblue;
+           font-size: large;
+           height: 24px;
+           min-width: 30px;
+           padding: 8px;
+           border-style: solid;
+           display: flex;
+           margin: 4px;
+           text-align: center;
+           justify-content: center;
+        }
+
+        .addchip {
+           border-radius: 10px;
+           color: aliceblue;
+           font-size: large;
+           height: 24px;
+           min-width: 30px;
+           padding: 8px;
+           border-style: none;
+           display: flex;
+           margin: 4px;
+           text-align: center;
+           justify-content: center;
+        }
+
+        .chipbtn {
+            background-color: #0000;
+            border-style: none;
+        }
+
+        .chipcontainer {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navigation.html' %}
+    <div class="centercontainer">
+
+
+        <div class="chipcontainer">
+
+            {% for tag in tags %}
+                <div class="chip" style="border-color: {{ tag.color }}; background-color: {{ tag.color }}13;">
+                    {{ tag.name }}
+                </div>
+            {% endfor %}
+
+
+            <button id="openTagModalButton" style="background-color: #0000; border-style: none;">
+                <div class="addchip" style="border-color: #45f8d1; background-color: #45f8d113;">
+                    <img class="icon" src="{% static 'images/addicon.svg' %}">
+                </div>
+            </button>
+            
+        </div>
+
+        
+        
+            <div class="filtercontainer">
+                
+                <button style="background-color: #0000; border-style: none;"><img class="icon" src="{% static 'images/sorticon1.svg' %}"></button>
+
+                <form method="GET" action="{% url 'notemarks' %}">
+                    <input type="text" class="searchinput" name="search" value="{{ request.GET.search }}" placeholder="Search Notemarks"/>
+                    <button type="submit" style="background-color: #0000; border-style: none; margin-left: 16px;">
+                        <img class="icon" src="{% static 'images/searchicon.svg' %}">
+                    </button>
+                </form>
+
+            </div>
+        
+
+
+        <div class="notemarkscontainer">
+
+            {% for notemark in notemarks %}
+                <div class="notemark" style="background-color: {{ notemark.color }}13; display: flex; align-items: stretch;">
+                    <div style="background-color: {{ notemark.color }}; width: 12px; margin-right:22px; border-radius: 100px;">&nbsp</div>
+                    <div style="display: flex; flex-direction: column; width: 100%;">
+                        <span class="notemarktitle">{{ notemark.title }}</span>
+                        <span class="notemarktext">{{ notemark.contents }}</span>
+                        <div style="width: 100%;">
+                            <!-- Delete Form for Notemarks -->
+                            <form action="{% url 'delete_notemark' notemark.id %}" method="POST" style="float: right;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger" style="background: transparent; border: none;">
+                                    <img class="icon" src="{% static 'images/trashicon.svg' %}" alt="Delete">
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            {% empty %}
+                <p>No notemarks for this book yet.</p>
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+
+    <div id="addTagModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeTagModal">&times;</span>
+            <h2>Create New Tag</h2>
+            <form method="POST" action="{% url 'add_tag' %}" class="modal-form">
+                {% csrf_token %}
+                <div class="form-field">
+                    <label for="tag_name">Tag Name:</label>
+                    <input type="text" name="tag_name" required>
+                </div>
+
+                <div class="form-field">
+                    <label for="tag_color">Tag Color:</label>
+                    <input type="color" name="tag_color" required>
+                </div>
+
+                <div class="form-field">
+                    <button type="submit">Create tag</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    var tagModal = document.getElementById("addTagModal");
+    var closeTagModal = document.getElementById("closeTagModal");
+    var openTagModalButton = document.getElementById("openTagModalButton");
+
+    // Open Category Modal (Only use openTagModalButton)
+    openTagModalButton.onclick = function() {
+        tagModal.style.display = "block";
+    }
+
+    // Close Category Modal
+    closeTagModal.onclick = function() {
+        tagModal.style.display = "none";
+    }
+
+    // Close Modal if clicked outside
+    window.onclick = function(event) {
+        if (event.target == tagModal) {
+            tagModal.style.display = "none";
+        }
+    }
+    </script>
+    
+</body>
+</html>
