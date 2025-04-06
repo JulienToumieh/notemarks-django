@@ -19,13 +19,17 @@ from django.urls import path
 from Notemarks import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.books, name='books'),
     path('books/', views.books, name='books'),
     path('notemarks/', views.notemarks, name='notemarks'),
     path('book/<int:id>/', views.book, name='book'),
     path('login/', views.login_view, name='login'),
+    path('logout/', views.custom_logout, name='logout'),
+    path('profile/', views.profile, name='profile'),
     path('add_book/', views.add_book, name='add_book'),
     path('add_notemark/', views.add_notemark, name='add_notemark'),
     path('delete_book/<int:book_id>/', views.delete_book, name='delete_book'),

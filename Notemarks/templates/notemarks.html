@@ -165,7 +165,9 @@
         
             <div class="filtercontainer">
                 
-                <button style="background-color: #0000; border-style: none;"><img class="icon" src="{% static 'images/sorticon1.svg' %}"></button>
+                <button id="sortNotemarksButton" style="background-color: #0000; border-style: none;">
+                    <img class="icon" src="{% static 'images/sorticon1.svg' %}">
+                </button>
 
                 <form method="GET" action="{% url 'notemarks' %}">
                     <input type="text" class="searchinput" name="search" value="{{ request.GET.search }}" placeholder="Search Notemarks"/>
@@ -252,6 +254,27 @@
             tagModal.style.display = "none";
         }
     }
+
+
+    // Get the current sort direction for notemarks from the query string
+    let currentNotemarksSortDirection = new URLSearchParams(window.location.search).get('notemarks_sort') || 'asc';  // Default to 'asc'
+
+    // Function to toggle the sort direction for notemarks
+    function toggleNotemarksSortDirection() {
+        // Toggle between 'asc' and 'desc'
+        currentNotemarksSortDirection = currentNotemarksSortDirection === 'asc' ? 'desc' : 'asc';
+
+        // Update the URL to include the new sort direction for notemarks
+        const url = new URL(window.location.href);
+        url.searchParams.set('notemarks_sort', currentNotemarksSortDirection);  // Set the notemarks_sort parameter
+
+        // Reload the page with the new sort direction
+        window.location.href = url.toString();
+    }
+
+    // Attach click event to the sort button for notemarks
+    document.getElementById("sortNotemarksButton").addEventListener("click", toggleNotemarksSortDirection);
+
     </script>
     
 </body>

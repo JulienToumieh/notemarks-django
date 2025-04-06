@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <link rel="stylesheet" {% load static %} href="{% static 'css/styles.css' %}">
+
+    <style>
+        .profileinfo {
+            margin-top: 100px;
+            padding: 40px;
+            background-color:#4da6da1c;
+            border-radius: 20px;
+        }
+
+    </style>
+
+</head>
+<body>
+    {% include 'navigation.html' %}
+
+
+    <div class="centercontainer">
+        <div class="profileinfo">
+            <h2>Welcome, {{ user.username }}!</h2>
+            <p><strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Date Joined:</strong> {{ user.date_joined }}</p>
+        </div>
+        <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+    </div>
+
+</body>
+</html>

@@ -11,6 +11,7 @@ from .forms import NotemarkForm
 from django.db.models import Q
 from .models import Category
 from django.contrib import messages
+from django.contrib.auth import logout
 
 @login_required
 def add_category(request):
@@ -147,9 +148,13 @@ def delete_book(request, book_id):
     messages.success(request, "Book deleted successfully!")
     return redirect('books')
 
+
+@login_required
 def books(request):
     categories = Category.objects.all()  # Get all categories
     search_term = request.GET.get('search', '')  # Get the search term from the query string
+    sort_direction = request.GET.get('sort', 'asc')  # Default sort is ascending
+
     if search_term:
         # Filter books by title or authors containing the search term
         books = Book.objects.filter(
@@ -159,10 +164,17 @@ def books(request):
         # If no search term, return all books
         books = Book.objects.all()
 
+    # Sort the books based on the sort direction
+    if sort_direction == 'desc':
+        books = books.order_by('-title')  # Adjust this field to whatever you want to sort by
+    else:
+        books = books.order_by('title')  # Adjust this field to whatever you want to sort by
+
     context = {
         'books': books,
         'categories': categories,
         'MEDIA_URL_BASE': settings.MEDIA_URL_BASE,  # Pass the MEDIA_URL from settings
+        'sort_direction': sort_direction,  # Pass sort direction to template if needed
     }
     
     return render(request, 'books.html', context)
@@ -173,8 +185,12 @@ def book(request, id):
     # Get the book object by its ID or return a 404 if not found
     book = get_object_or_404(Book, id=id)
     tags = Tag.objects.all()
+
     # Get the search term for notemarks from the query string
     search_term = request.GET.get('search', '')
+
+    # Get the sort direction for notemarks from the query string, default is 'asc'
+    notemarks_sort_direction = request.GET.get('notemarks_sort', 'asc')
 
     # Filter notemarks based on title or contents if a search term is provided
     if search_term:
@@ -187,32 +203,53 @@ def book(request, id):
         # If no search term, fetch all notemarks for the book
         notemarks = Notemark.objects.filter(book=book)
 
+    # Sort the notemarks based on the sort direction
+    if notemarks_sort_direction == 'desc':
+        notemarks = notemarks.order_by('-title')  # Change this field as needed
+    else:
+        notemarks = notemarks.order_by('title')  # Change this field as needed
+
     context = {
         'book': book,
-        'notemarks': notemarks,  # Pass the filtered notemarks to the template
+        'notemarks': notemarks,  # Pass the sorted notemarks to the template
         'MEDIA_URL_BASE': settings.MEDIA_URL_BASE,  # Pass the MEDIA_URL from settings
-        'tags': tags
+        'tags': tags,
+        'notemarks_sort_direction': notemarks_sort_direction  # Pass sort direction to the template
     }
 
     # Pass the book and notemarks to the template
     return render(request, 'book.html', context)
 
+
 @login_required
 def notemarks(request):
-
     tags = Tag.objects.all()
 
     search_term = request.GET.get('search', '')  # Get the search term from the query string
+
+    # Get the sort direction for notemarks from the query string, default is 'asc'
+    notemarks_sort_direction = request.GET.get('notemarks_sort', 'asc')
+
     if search_term:
-        # Filter books by title or authors containing the search term
+        # Filter notemarks based on the search term (title or contents)
         notemarks = Notemark.objects.filter(
             Q(title__icontains=search_term) | Q(contents__icontains=search_term)
         )
     else:
-        # If no search term, return all books
+        # If no search term, return all notemarks
         notemarks = Notemark.objects.all()
 
-    return render(request, 'notemarks.html', {'notemarks': notemarks, 'tags': tags})
+    # Sort the notemarks based on the sort direction
+    if notemarks_sort_direction == 'desc':
+        notemarks = notemarks.order_by('-title')  # Change this field if you want to sort by a different field
+    else:
+        notemarks = notemarks.order_by('title')  # Change this field if you want to sort by a different field
+
+    return render(request, 'notemarks.html', {
+        'notemarks': notemarks, 
+        'tags': tags,
+        'notemarks_sort_direction': notemarks_sort_direction  # Pass the sort direction to the template if needed
+    })
 
 
 @login_required
@@ -246,6 +283,16 @@ def login_view(request):
     
     return render(request, 'login.html', {'form': form})
 
+
+@login_required
+def profile(request):
+    user = request.user
+    return render(request, 'profile.html', {'user': user})
+
+
+def custom_logout(request):
+    logout(request)
+    return redirect('login')  # Redirect to homepage after logout
 
 @login_required
 def edit_book(request, book_id):

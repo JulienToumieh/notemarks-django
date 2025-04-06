@@ -154,7 +154,7 @@
         </div>
 
         <div class="filtercontainer">
-            <button style="background-color: #0000; border-style: none;">
+            <button id="sortButton" style="background-color: #0000; border-style: none;">
                 <img class="icon" src="{% static 'images/sorticon1.svg' %}">
             </button>
         
@@ -347,6 +347,27 @@
             categoryModal.style.display = "none";
         }
     }
+
+
+
+    // Get the current sort direction from the query string
+    let currentSortDirection = new URLSearchParams(window.location.search).get('sort') || 'asc';  // Default to 'asc'
+
+    // Function to toggle the sort direction and reload the page
+    function toggleSortDirection() {
+        // Toggle between 'asc' and 'desc'
+        currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+
+        // Update the URL to include the new sort direction
+        const url = new URL(window.location.href);
+        url.searchParams.set('sort', currentSortDirection);  // Set the sort direction in the query parameters
+
+        // Reload the page with the new sort direction
+        window.location.href = url.toString();
+    }
+
+    // Attach click event to the sort button
+    document.getElementById("sortButton").addEventListener("click", toggleSortDirection);
 
     </script>
 
