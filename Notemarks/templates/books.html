@@ -85,32 +85,34 @@
         }
 
         .chip {
-           border-radius: 10px;
-           border-width: 4px;
-           color: aliceblue;
-           font-size: large;
-           height: 24px;
-           min-width: 30px;
-           padding: 8px;
-           border-style: solid;
-           display: flex;
-           margin: 4px;
-           text-align: center;
-           justify-content: center;
+            border-radius: 10px;
+            border-width: 2px;  /* Default border for unselected categories */
+            color: aliceblue;
+            border: #0000;
+            font-size: large;
+            height: 24px;
+            min-width: 30px;
+            padding: 8px;
+            border-style: solid;
+            display: flex;
+            margin: 4px;
+            text-align: center;
+            justify-content: center;
+            transition: background-color 0.3s ease; /* Smooth transition for background */
         }
 
         .addchip {
-           border-radius: 10px;
-           color: aliceblue;
-           font-size: large;
-           height: 24px;
-           min-width: 30px;
-           padding: 8px;
-           border-style: none;
-           display: flex;
-           margin: 4px;
-           text-align: center;
-           justify-content: center;
+            border-radius: 10px;
+            color: aliceblue;
+            font-size: large;
+            height: 24px;
+            min-width: 30px;
+            padding: 8px;
+            border-style: none;
+            display: flex;
+            margin: 4px;
+            text-align: center;
+            justify-content: center;
         }
 
         .chipbtn {
@@ -122,6 +124,8 @@
             display: flex;
             justify-content: center;
         }
+
+
 
         
         form {
@@ -135,23 +139,25 @@
     {% include 'navigation.html' %}
     <div class="centercontainer">
 
-
         <div class="chipcontainer">
-
             {% for category in categories %}
-                <div class="chip" style="border-color: {{ category.color }}; background-color: {{ category.color }}13;">
-                    {{ category.name }}
-                </div>
+                <a href="{% url 'books' %}?category={{ category.id }}{% if search %}&search={{ search }}{% endif %}{% if sort_direction %}&sort={{ sort_direction }}{% endif %}">
+                    <div class="chip" 
+                         data-category-id="{{ category.id }}" 
+                         style="border-bottom-color: {{ category.color }}; background-color: {{ category.color }}{% if category.id != category_filter %}20{% endif %};">
+                        {{ category.name }}
+                    </div>
+                </a>
             {% endfor %}
-
-
+            
             <button id="openCategoryModalButton" style="background-color: #0000; border-style: none;">
                 <div class="addchip" style="border-color: #45f8d1; background-color: #45f8d113;">
                     <img class="icon" src="{% static 'images/addicon.svg' %}">
                 </div>
             </button>
-            
         </div>
+        
+        
 
         <div class="filtercontainer">
             <button id="sortButton" style="background-color: #0000; border-style: none;">
@@ -368,6 +374,37 @@
 
     // Attach click event to the sort button
     document.getElementById("sortButton").addEventListener("click", toggleSortDirection);
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all category chips
+        const categoryChips = document.querySelectorAll('.chip');
+        // Loop through each chip and add a click event listener
+        categoryChips.forEach(chip => {
+            chip.addEventListener('click', function(event) {
+                event.preventDefault();  // Prevent default link behavior (page refresh)
+                
+                // Get the category id of the clicked chip
+                const categoryId = chip.dataset.categoryId;
+                const currentUrl = new URL(window.location.href); // Get the current URL
+                
+                // Check if this category is already in the URL as a filter
+                const currentCategoryParam = currentUrl.searchParams.get('category');
+                
+                if (currentCategoryParam === categoryId) {
+                    // If the category is already selected, remove it from the URL to "deselect"
+                    currentUrl.searchParams.delete('category');
+                } else {
+                    // Otherwise, set the selected category in the URL
+                    currentUrl.searchParams.set('category', categoryId);
+                }
+                
+                // Update the URL (reloads the page)
+                window.location.href = currentUrl.toString();
+            });
+        });
+    });
 
     </script>
 

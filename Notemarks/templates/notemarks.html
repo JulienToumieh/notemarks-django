@@ -71,18 +71,20 @@
         }
 
         .chip {
-           border-radius: 10px;
-           border-width: 4px;
-           color: aliceblue;
-           font-size: large;
-           height: 24px;
-           min-width: 30px;
-           padding: 8px;
-           border-style: solid;
-           display: flex;
-           margin: 4px;
-           text-align: center;
-           justify-content: center;
+            border-radius: 10px;
+            border-width: 2px;  /* Default border for unselected categories */
+            color: aliceblue;
+            border: #0000;
+            font-size: large;
+            height: 24px;
+            min-width: 30px;
+            padding: 8px;
+            border-style: solid;
+            display: flex;
+            margin: 4px;
+            text-align: center;
+            justify-content: center;
+            transition: background-color 0.3s ease; /* Smooth transition for background */
         }
 
         .addchip {
@@ -147,21 +149,23 @@
 
 
         <div class="chipcontainer">
-
             {% for tag in tags %}
-                <div class="chip" style="border-color: {{ tag.color }}; background-color: {{ tag.color }}13;">
-                    {{ tag.name }}
-                </div>
+                <a href="{% url 'notemarks' %}?tag={{ tag.id }}{% if search %}&search={{ search }}{% endif %}{% if sort_direction %}&sort={{ sort_direction }}{% endif %}">
+                    <div class="chip" 
+                         data-tag-id="{{ tag.id }}" 
+                         style="border-bottom-color: {{ tag.color }}; background-color: {{ tag.color }}{% if tag.id != tag_filter %}20{% endif %};">
+                        {{ tag.name }}
+                    </div>
+                </a>
             {% endfor %}
-
-
+            
             <button id="openTagModalButton" style="background-color: #0000; border-style: none;">
                 <div class="addchip" style="border-color: #45f8d1; background-color: #45f8d113;">
                     <img class="icon" src="{% static 'images/addicon.svg' %}">
                 </div>
             </button>
-            
         </div>
+
         
             <div class="filtercontainer">
                 
@@ -274,6 +278,40 @@
 
     // Attach click event to the sort button for notemarks
     document.getElementById("sortNotemarksButton").addEventListener("click", toggleNotemarksSortDirection);
+
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Select all category chips
+        const tagChips = document.querySelectorAll('.chip');
+        // Loop through each chip and add a click event listener
+        tagChips.forEach(chip => {
+            chip.addEventListener('click', function(event) {
+                event.preventDefault();  // Prevent default link behavior (page refresh)
+
+                // Get the category id of the clicked chip
+                const tagId = chip.dataset.tagId;
+                const currentUrl = new URL(window.location.href); // Get the current URL
+                
+
+                // Check if this category is already in the URL as a filter
+                const currentTagParam = currentUrl.searchParams.get('tag');
+                
+                if (currentTagParam === tagId) {
+                    // If the category is already selected, remove it from the URL to "deselect"
+                    currentUrl.searchParams.delete('tag');
+                } else {
+                    // Otherwise, set the selected category in the URL
+                    currentUrl.searchParams.set('tag', tagId);
+                }
+                
+                // Update the URL (reloads the page)
+                window.location.href = currentUrl.toString();
+            });
+        });
+    });
+
+
 
     </script>
     

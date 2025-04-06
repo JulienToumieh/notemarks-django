@@ -154,15 +154,26 @@ def books(request):
     categories = Category.objects.all()  # Get all categories
     search_term = request.GET.get('search', '')  # Get the search term from the query string
     sort_direction = request.GET.get('sort', 'asc')  # Default sort is ascending
+    category_filter = request.GET.get('category', None)  # Get the category filter (if any)
+
+
+    try:
+        category_filter = int(category_filter) if category_filter else None
+    except ValueError:
+        category_filter = None  # In case it's not a valid integer
+
+    # Base query set for books
+    books = Book.objects.all()
 
     if search_term:
         # Filter books by title or authors containing the search term
-        books = Book.objects.filter(
+        books = books.filter(
             Q(title__icontains=search_term) | Q(authors__icontains=search_term)
         )
-    else:
-        # If no search term, return all books
-        books = Book.objects.all()
+
+    # Filter books by category if category_filter is provided
+    if category_filter:
+        books = books.filter(categories__id=category_filter)
 
     # Sort the books based on the sort direction
     if sort_direction == 'desc':
@@ -175,9 +186,11 @@ def books(request):
         'categories': categories,
         'MEDIA_URL_BASE': settings.MEDIA_URL_BASE,  # Pass the MEDIA_URL from settings
         'sort_direction': sort_direction,  # Pass sort direction to template if needed
+        'category_filter': category_filter,  # Pass selected category filter to template
     }
-    
+
     return render(request, 'books.html', context)
+
 
 
 @login_required
@@ -220,35 +233,46 @@ def book(request, id):
     # Pass the book and notemarks to the template
     return render(request, 'book.html', context)
 
-
 @login_required
 def notemarks(request):
     tags = Tag.objects.all()
 
     search_term = request.GET.get('search', '')  # Get the search term from the query string
+    tag_filter = request.GET.get('tag', None)  # Get the tag filter (if any)
+
+    # Try to convert the tag_filter to an integer if it's present
+    try:
+        tag_filter = int(tag_filter) if tag_filter else None
+    except ValueError:
+        tag_filter = None  # In case it's not a valid integer
+
+    # Base query set for notemarks
+    notemarks = Notemark.objects.all()
+
+    if search_term:
+        # Filter notemarks based on the search term (title or contents)
+        notemarks = notemarks.filter(
+            Q(title__icontains=search_term) | Q(contents__icontains=search_term)
+        )
+
+    # Filter notemarks by tag if tag_filter is provided
+    if tag_filter:
+        notemarks = notemarks.filter(tags__id=tag_filter)
 
     # Get the sort direction for notemarks from the query string, default is 'asc'
     notemarks_sort_direction = request.GET.get('notemarks_sort', 'asc')
 
-    if search_term:
-        # Filter notemarks based on the search term (title or contents)
-        notemarks = Notemark.objects.filter(
-            Q(title__icontains=search_term) | Q(contents__icontains=search_term)
-        )
-    else:
-        # If no search term, return all notemarks
-        notemarks = Notemark.objects.all()
-
     # Sort the notemarks based on the sort direction
     if notemarks_sort_direction == 'desc':
-        notemarks = notemarks.order_by('-title')  # Change this field if you want to sort by a different field
+        notemarks = notemarks.order_by('-title')  # Adjust this field if needed
     else:
-        notemarks = notemarks.order_by('title')  # Change this field if you want to sort by a different field
+        notemarks = notemarks.order_by('title')  # Adjust this field if needed
 
     return render(request, 'notemarks.html', {
         'notemarks': notemarks, 
         'tags': tags,
-        'notemarks_sort_direction': notemarks_sort_direction  # Pass the sort direction to the template if needed
+        'notemarks_sort_direction': notemarks_sort_direction,  # Pass sort direction to template if needed
+        'tag_filter': tag_filter,  # Pass selected tag filter to template
     })
 
 
