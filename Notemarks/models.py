@@ -2,6 +2,7 @@ import os
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.validators import EmailValidator
 
 # Function to generate dynamic filename for cover image
 def upload_cover_image(instance, filename):
@@ -37,7 +38,8 @@ class Book(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     authors = models.CharField(max_length=255)
-    cover_image = models.CharField(max_length=255, blank=True, null=True)  # Use CharField for just a string
+    cover_image = models.CharField(max_length=255, blank=True, null=True) 
+    book_pdf = models.CharField(max_length=255, blank=True, null=True)
     pages = models.IntegerField(blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='unread', blank=True)
     rating = models.FloatField(blank=True, null=True)
@@ -45,6 +47,14 @@ class Book(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
     categories = models.ManyToManyField(Category)
     tags = models.ManyToManyField(Tag, blank=True)
+
+    author_email = models.EmailField(
+        max_length=255, 
+        blank=True, 
+        null=True, 
+        validators=[EmailValidator()], 
+        help_text="The author's email address."
+    )
 
     def __str__(self):
         return self.title
@@ -64,3 +74,4 @@ class Notemark(models.Model):
 
     def __str__(self):
         return self.title
+

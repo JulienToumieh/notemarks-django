@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from .forms import BookForm
+from .forms import BookForm, RegisterForm
 from .models import Book, Notemark, Tag
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.decorators import login_required
@@ -87,31 +87,42 @@ def add_book(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         authors = request.POST.get('authors')
+        author_email = request.POST.get('author_email')  # Get the author's email from the form
         description = request.POST.get('description')
-        cover_image = request.FILES.get('cover_image')  # Handle file upload
+        
+        cover_image = request.FILES.get('cover_image')  # Handle cover image upload
         cover_image_path = None
-
-        # Save the uploaded image to the MEDIA_ROOT directory
+        book_pdf = request.FILES.get('book_pdf')  # Handle book PDF upload
+        book_pdf_path = None
+        
+        # Save the uploaded cover image to the MEDIA_ROOT directory
         if cover_image:
             fs = FileSystemStorage()
             cover_image_path = fs.save(f'cover_images/{cover_image.name}', cover_image)
+        
+        # Save the uploaded book PDF to the MEDIA_ROOT directory
+        if book_pdf:
+            fs = FileSystemStorage()
+            book_pdf_path = fs.save(f'books_pdfs/{book_pdf.name}', book_pdf)
 
         # Get the selected categories from the POST data (assuming you have checkboxes for categories)
         category_ids = request.POST.getlist('categories')  # Get a list of selected category IDs
         categories = Category.objects.filter(id__in=category_ids)  # Get the Category objects
 
         # Debugging: Print the values being used to create the book
-        print(f"Title: {title}, Authors: {authors}, Description: {description}, Cover Image: {cover_image_path}")
+        print(f"Title: {title}, Authors: {authors}, Email: {author_email}, Description: {description}, Cover Image: {cover_image_path}, PDF: {book_pdf_path}")
         print(f"Selected Categories: {categories}")
 
         try:
-            # Create the book entry with the saved image path and user
+            # Create the book entry with the saved cover image path, PDF path, user, and author email
             book = Book.objects.create(
                 title=title,
                 authors=authors,
                 description=description,
                 cover_image=cover_image_path,  # Store only the relative path
-                user=request.user  # Associate the book with the logged-in user
+                book_pdf=book_pdf_path,  # Store only the relative path to the PDF
+                user=request.user,  # Associate the book with the logged-in user
+                author_email=author_email  # Save the author's email
             )
 
             # Associate the selected categories with the book (ManyToManyField)
@@ -129,6 +140,7 @@ def add_book(request):
     # Render the form, passing categories to the template for selection
     categories = Category.objects.all()
     return render(request, 'books.html', {'categories': categories})
+
 
 @login_required
 def delete_book(request, book_id):
@@ -233,6 +245,7 @@ def book(request, id):
     # Pass the book and notemarks to the template
     return render(request, 'book.html', context)
 
+
 @login_required
 def notemarks(request):
     tags = Tag.objects.all()
@@ -308,6 +321,20 @@ def login_view(request):
     return render(request, 'login.html', {'form': form})
 
 
+def register_view(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Registration successful! You can now log in.")
+            return redirect('login')  # Redirect to login page after successful registration
+        else:
+            messages.error(request, "There was an error with your registration.")
+    else:
+        form = RegisterForm()
+
+    return render(request, 'register.html', {'form': form})
+
 @login_required
 def profile(request):
     user = request.user
@@ -317,6 +344,7 @@ def profile(request):
 def custom_logout(request):
     logout(request)
     return redirect('login')  # Redirect to homepage after logout
+
 
 @login_required
 def edit_book(request, book_id):

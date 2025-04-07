@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" {% load static %} href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% include 'navigation.html' %}
+
+    <div class="centerdiv">
+        <div class="register-container">
+            <h2>Register</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn-register">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        /* Full body styling */
+        .centerdiv {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .register-container {
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid var(--secondary);
+            border-radius: 4px;
+            background-color: #0000;
+            color: #fff;
+            font-size: large;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--secondary);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-register:hover {
+            background-color: var(--primary);
+            color: black;
+        }
+    </style>
+</body>
+</html>

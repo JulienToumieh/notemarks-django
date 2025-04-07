@@ -28,6 +28,7 @@ urlpatterns = [
     path('notemarks/', views.notemarks, name='notemarks'),
     path('book/<int:id>/', views.book, name='book'),
     path('login/', views.login_view, name='login'),
+    path('register/', views.register_view, name='register'),
     path('logout/', views.custom_logout, name='logout'),
     path('profile/', views.profile, name='profile'),
     path('add_book/', views.add_book, name='add_book'),
