@@ -13,15 +13,18 @@
         {% block content %}
         <div class="login-container">
             <h2>Login</h2>
-            <form method="post">
+            <form method="post" style="margin-bottom: 10px;">
                 {% csrf_token %}
                 <div class="form-group">
                     {{ form.as_p }}
                 </div>
+                
                 <button type="submit" class="btn-login">Login</button>
             </form>
+            <a href="/register" style="text-decoration: none; color: rgb(190, 189, 111);">Register instead</a>
         </div>
         {% endblock %}
+        
     </div>
 
 

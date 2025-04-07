@@ -11,13 +11,14 @@
     <div class="centerdiv">
         <div class="register-container">
             <h2>Register</h2>
-            <form method="post">
+            <form method="post" style="margin-bottom: 10px;">
                 {% csrf_token %}
                 <div class="form-group">
                     {{ form.as_p }}
                 </div>
                 <button type="submit" class="btn-register">Register</button>
             </form>
+            <a href="/login" style="text-decoration: none; color: rgb(190, 189, 111);">login instead</a>
         </div>
     </div>
 

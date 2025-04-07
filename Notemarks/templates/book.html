@@ -80,7 +80,7 @@
         .bookinfo {
             display: flex;
             flex-direction: column;
-            max-width: 760px;
+            max-width: 800px;
             justify-content: center;
         }
 
@@ -127,11 +127,11 @@
         <div class="bookdescriptioncontainer">
 
             <img class="bookcover" src="{{MEDIA_URL_BASE}}{{ book.cover_image }}">
-            <div class="bookinfo">
+            <div class="bookinfo"">
                 <span class="booktitle">{{ book.title }}</span>
                 <span class="bookauthor">{{ book.authors }}</span>
                 <span class="bookdescription">{{ book.description }}</span>
-                <div style="width: 100%;">
+                <div style="width: 100%; margin-top: 20px;">
                     <!-- Delete Form -->
                     <form action="{% url 'delete_book' book.id %}" method="POST" style="float: right;">
                         {% csrf_token %}
@@ -141,7 +141,7 @@
                         </button>
                     </form>
 
-                    <button style="background-color: #0000; border-style: none;" class="btn btn-danger">
+                    <button style="background-color: #0000; border-style: none; float: right; margin-right: 12px;" class="btn btn-danger">
                         <img class="icon" src="{% static 'images/editicon.svg' %}" alt="Edit">
                         
                     </button>
