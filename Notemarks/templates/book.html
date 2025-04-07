@@ -161,9 +161,9 @@
             <div class="filtercontainer">
                 
                 <button id="sortNotemarksButton" style="background-color: #0000; border-style: none;">
-                    <img class="icon" src="{% static 'images/sorticon1.svg' %}">
+                    <img class="icon"  src="{% static 'images/sorticon1.svg' %}">
                 </button>
-                <form method="GET" action="{% url 'book' book.id %}">
+                <form method="GET"  style="display: flex;" action="{% url 'book' book.id %}">
                     <input type="text" class="searchinput" name="search" value="{{ request.GET.search }}" placeholder="Search Notemarks"/>
                     <button type="submit" style="background-color: #0000; border-style: none; margin-left: 16px;">
                         <img class="icon" src="{% static 'images/searchicon.svg' %}">
@@ -276,7 +276,7 @@
                     <input type="number" name="page" required>
                 </div>
                 
-                <div class="form-field">
+                <div>
                     <label for="color">Color:</label>
                     <input type="color" name="color" required>
                 </div>

@@ -160,6 +160,9 @@ def delete_book(request, book_id):
     messages.success(request, "Book deleted successfully!")
     return redirect('books')
 
+def home(request):
+    return render(request, 'home.html')
+
 
 @login_required
 def books(request):
@@ -168,14 +171,13 @@ def books(request):
     sort_direction = request.GET.get('sort', 'asc')  # Default sort is ascending
     category_filter = request.GET.get('category', None)  # Get the category filter (if any)
 
-
     try:
         category_filter = int(category_filter) if category_filter else None
     except ValueError:
         category_filter = None  # In case it's not a valid integer
 
     # Base query set for books
-    books = Book.objects.all()
+    books = Book.objects.filter(user=request.user)  # Filter books by the current logged-in user
 
     if search_term:
         # Filter books by title or authors containing the search term

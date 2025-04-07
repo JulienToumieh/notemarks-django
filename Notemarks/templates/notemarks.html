@@ -107,6 +107,8 @@
         }
 
         .chipcontainer {
+            margin-top: 120px;
+            margin-bottom: 50px;
             display: flex;
             justify-content: center;
         }
@@ -131,7 +133,7 @@
             font-size: larger;
             margin-left: 300px;
             padding-left: 20px;
-            height: 100%;
+            height: 48px;
         }
 
         form {
@@ -173,7 +175,7 @@
                     <img class="icon" src="{% static 'images/sorticon1.svg' %}">
                 </button>
 
-                <form method="GET" action="{% url 'notemarks' %}">
+                <form method="GET" style="display: flex;" action="{% url 'notemarks' %}">
                     <input type="text" class="searchinput" name="search" value="{{ request.GET.search }}" placeholder="Search Notemarks"/>
                     <button type="submit" style="background-color: #0000; border-style: none; margin-left: 16px;">
                         <img class="icon" src="{% static 'images/searchicon.svg' %}">
@@ -225,7 +227,7 @@
                     <input type="text" name="tag_name" required>
                 </div>
 
-                <div class="form-field">
+                <div>
                     <label for="tag_color">Tag Color:</label>
                     <input type="color" name="tag_color" required>
                 </div>

@@ -68,6 +68,7 @@
             font-size: larger;
             margin-left: 300px;
             padding-left: 20px;
+            height: 48px;
         }
 
         a {
@@ -121,10 +122,11 @@
         }
 
         .chipcontainer {
+            margin-top: 120px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: center;
         }
-
 
 
         
@@ -165,7 +167,7 @@
             </button>
         
             <!-- Search Form -->
-            <form method="get" action="{% url 'books' %}">
+            <form method="get"  style="display: flex;" action="{% url 'books' %}">
                 <input type="text" name="search" class="searchinput" value="{{ search_query }}" placeholder="Search by title or author">
                 <button type="submit" style="background-color: #0000; border-style: none; margin-left: 16px;">
                     <img class="icon" src="{% static 'images/searchicon.svg' %}">
@@ -305,7 +307,7 @@
                         <input type="text" name="category_name" required>
                     </div>
     
-                    <div class="form-field">
+                    <div>
                         <label for="category_color">Category Color:</label>
                         <input type="color" name="category_color" required>
                     </div>

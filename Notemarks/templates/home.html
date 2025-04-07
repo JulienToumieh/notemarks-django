@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book</title>
+    
+    <link rel="stylesheet" {% load static %} href="{% static 'css/styles.css' %}">
+
+    <style>
+
+        .notemarkscontainer {
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 120px;
+        }
+
+        .centercontainer {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .mainimg {
+            margin-top: 200px;
+            width: 420px;
+        }
+
+        .mainhero {
+            margin-top: 60px;
+            width: 800px;
+        }
+
+
+    </style>
+</head>
+<body>
+    {% include 'navigation.html' %}
+    <div class="centercontainer">
+
+        <img class="mainimg" src="{% static 'images/logo.svg' %}">
+        <img class="mainhero" src="{% static 'images/hero.png' %}">
+
+    </div>
+</body>
+</html>
