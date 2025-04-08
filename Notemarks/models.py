@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import EmailValidator
 
-# Function to generate dynamic filename for cover image
 def upload_cover_image(instance, filename):
     timestamp = timezone.now().strftime('%Y%m%d_%H%M%S')
     ext = filename.split('.')[-1]
@@ -18,7 +17,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-# Tags Model
 class Tag(models.Model):
     name = models.CharField(max_length=255)
     color = models.CharField(max_length=7)
@@ -26,7 +24,6 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
-# Books Model
 class Book(models.Model):
     STATUS_CHOICES = [
         ('unread', 'Unread'),
@@ -46,7 +43,6 @@ class Book(models.Model):
     favourite = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
     categories = models.ManyToManyField(Category)
-    tags = models.ManyToManyField(Tag, blank=True)
 
     author_email = models.EmailField(
         max_length=255, 
@@ -60,15 +56,13 @@ class Book(models.Model):
         return self.title
 
 
-
-# Notemarks Model
 class Notemark(models.Model):
     title = models.CharField(max_length=255)
     chapter = models.CharField(max_length=255)
     page = models.IntegerField()
     color = models.CharField(max_length=7)
     favourite = models.BooleanField(default=False)
-    tags = models.ManyToManyField(Tag, blank=True)  # Many-to-many relationship for tags
+    tags = models.ManyToManyField(Tag, blank=True) 
     contents = models.CharField(max_length=32000, blank=True)
     book = models.ForeignKey(Book, on_delete=models.CASCADE, blank=True, null=True) 
 
