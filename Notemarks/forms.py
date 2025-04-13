@@ -15,14 +15,13 @@ class NotemarkForm(forms.ModelForm):
             'favourite',
             'tags',
             'contents',
-            'book',  # Ensure the 'book' field is included
+            'book',
         ]
         widgets = {
             'tags': forms.CheckboxSelectMultiple(),
             'color': forms.TextInput(attrs={'type': 'color'}),
         }
 
-    # Custom validation for 'page' field
     def clean_page(self):
         page = self.cleaned_data.get('page')
         if page < 1:
@@ -48,7 +47,6 @@ class BookForm(forms.ModelForm):
             'categories'
         ]
         
-    # You can add custom validation here if needed
     def clean_rating(self):
         rating = self.cleaned_data.get('rating')
         if rating is not None and (rating < 0 or rating > 5):

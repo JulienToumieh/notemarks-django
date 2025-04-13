@@ -77,9 +77,6 @@
         }
 
 
-        
-
-        /* Adjusted modal header */
         h2 {
             color: var(--text);
             text-align: center;
@@ -88,7 +85,7 @@
 
         .chip {
             border-radius: 10px;
-            border-width: 2px;  /* Default border for unselected categories */
+            border-width: 2px; 
             color: aliceblue;
             border: #0000;
             font-size: large;
@@ -100,7 +97,7 @@
             margin: 4px;
             text-align: center;
             justify-content: center;
-            transition: background-color 0.3s ease; /* Smooth transition for background */
+            transition: background-color 0.3s ease;
         }
 
         .addchip {
@@ -129,8 +126,6 @@
             justify-content: center;
         }
 
-
-        
         form {
             padding: 0px;
             margin: 0px;
@@ -167,7 +162,6 @@
                 <img class="icon" src="{% static 'images/sorticon1.svg' %}">
             </button>
         
-            <!-- Search Form -->
             <form method="get"  style="display: flex;" action="{% url 'books' %}">
                 <input type="text" name="search" class="searchinput" value="{{ search_query }}" placeholder="Search by title or author">
                 <button type="submit" style="background-color: #0000; border-style: none; margin-left: 16px;">
@@ -175,7 +169,6 @@
                 </button>
             </form>
              
-            <!-- Add Book Button (to open modal) -->
             <button id="addBookButton" style="background-color: #0000; border-style: none; margin-left: 270px;">
                 <img class="icon" src="{% static 'images/addicon.svg' %}">
             </button>
@@ -213,13 +206,11 @@
             <form method="POST" action="{% url 'add_book' %}" enctype="multipart/form-data" class="modal-form">
                 {% csrf_token %}
     
-                <!-- Book Title -->
                 <div class="form-field">
                     <label for="title">Title:</label>
                     <input type="text" name="title" id="title" required>
                 </div>
     
-                <!-- Authors -->
                 <div class="form-field">
                     <label for="authors">Authors:</label>
                     <input type="text" name="authors" id="authors" required>
@@ -230,13 +221,11 @@
                     <input type="email" name="author_email" id="author_email" required>
                 </div>
     
-                <!-- Description -->
                 <div class="form-field">
                     <label for="description">Description:</label>
                     <textarea name="description" id="description"></textarea>
                 </div>
     
-                <!-- Cover Image -->
                 <div class="form-field">
                     <label for="cover_image">Cover Image:</label>
                     <input type="file" name="cover_image" id="cover_image" required>
@@ -247,13 +236,11 @@
                     <input type="file" name="book_pdf" id="book_pdf" required>
                 </div>
     
-                <!-- Number of Pages -->
                 <div class="form-field">
                     <label for="pages">Pages:</label>
                     <input type="number" name="pages" id="pages" required>
                 </div>
     
-                <!-- Status -->
                 <div class="form-field">
                     <label for="status">Status:</label>
                     <select name="status" id="status">
@@ -264,30 +251,25 @@
                     </select>
                 </div>
     
-                <!-- Rating -->
                 <div class="form-field">
                     <label for="rating">Rating:</label>
                     <input type="number" name="rating" id="rating" min="0" max="5">
                 </div>
     
-                <!-- Favourite -->
                 <div class="form-field">
                     <label for="favourite">Favourite:</label>
                     <input type="checkbox" name="favourite" id="favourite">
                 </div>
     
-                <!-- Categories -->
                 <div class="form-field">
                     <label for="categories">Categories:</label>
                     <select name="categories" id="categories" multiple>
-                        <!-- Dynamic category options go here -->
                         {% for category in categories %}
                             <option value="{{ category.id }}">{{ category.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
     
-                <!-- Buttons to Add Book and Create New Category -->
                 <div class="form-field">
                     <button type="submit">Add Book</button>
                     <button type="button" id="addCategoryButton">Add New Category</button>
@@ -297,7 +279,6 @@
     </div>
     
 
-        <!-- Modal for Creating Category -->
         <div id="addCategoryModal" class="modal">
             <div class="modal-content">
                 <span class="close" id="closeCategoryModal">&times;</span>
@@ -321,30 +302,24 @@
             </div>
         </div>
     
-    <!-- JavaScript to Handle Modals -->
     <script>
-        // Modal for Adding Book
     var bookModal = document.getElementById("addBookModal");
     var closeModal = document.getElementById("closeModal");
     var addBookButton = document.getElementById("addBookButton");
 
-    // Modal for Adding Category
     var categoryModal = document.getElementById("addCategoryModal");
     var closeCategoryModal = document.getElementById("closeCategoryModal");
     var addCategoryButton = document.getElementById("addCategoryButton");
     var openCategoryModalButton = document.getElementById("openCategoryModalButton");
 
-    // Open Book Modal
     addBookButton.onclick = function() {
         bookModal.style.display = "block";
     }
 
-    // Close Book Modal
     closeModal.onclick = function() {
         bookModal.style.display = "none";
     }
 
-    // Open Category Modal (Two buttons)
     addCategoryButton.onclick = function() {
         categoryModal.style.display = "block";
     }
@@ -353,12 +328,10 @@
         categoryModal.style.display = "block";
     }
 
-    // Close Category Modal
     closeCategoryModal.onclick = function() {
         categoryModal.style.display = "none";
     }
 
-    // Combined window.onclick for both modals
     window.onclick = function(event) {
         if (event.target == bookModal) {
             bookModal.style.display = "none";
@@ -370,51 +343,40 @@
 
 
 
-    // Get the current sort direction from the query string
-    let currentSortDirection = new URLSearchParams(window.location.search).get('sort') || 'asc';  // Default to 'asc'
+    let currentSortDirection = new URLSearchParams(window.location.search).get('sort') || 'asc'; 
 
-    // Function to toggle the sort direction and reload the page
     function toggleSortDirection() {
-        // Toggle between 'asc' and 'desc'
         currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
 
-        // Update the URL to include the new sort direction
         const url = new URL(window.location.href);
-        url.searchParams.set('sort', currentSortDirection);  // Set the sort direction in the query parameters
+        url.searchParams.set('sort', currentSortDirection); 
 
-        // Reload the page with the new sort direction
         window.location.href = url.toString();
     }
 
-    // Attach click event to the sort button
     document.getElementById("sortButton").addEventListener("click", toggleSortDirection);
 
 
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Select all category chips
+
         const categoryChips = document.querySelectorAll('.chip');
-        // Loop through each chip and add a click event listener
+
         categoryChips.forEach(chip => {
             chip.addEventListener('click', function(event) {
-                event.preventDefault();  // Prevent default link behavior (page refresh)
+                event.preventDefault(); 
                 
-                // Get the category id of the clicked chip
                 const categoryId = chip.dataset.categoryId;
-                const currentUrl = new URL(window.location.href); // Get the current URL
+                const currentUrl = new URL(window.location.href);
                 
-                // Check if this category is already in the URL as a filter
                 const currentCategoryParam = currentUrl.searchParams.get('category');
                 
                 if (currentCategoryParam === categoryId) {
-                    // If the category is already selected, remove it from the URL to "deselect"
                     currentUrl.searchParams.delete('category');
                 } else {
-                    // Otherwise, set the selected category in the URL
                     currentUrl.searchParams.set('category', categoryId);
                 }
                 
-                // Update the URL (reloads the page)
                 window.location.href = currentUrl.toString();
             });
         });

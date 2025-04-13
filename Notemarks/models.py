@@ -9,7 +9,6 @@ def upload_cover_image(instance, filename):
     ext = filename.split('.')[-1]
     return f'cover_image_{timestamp}.{ext}'
 
-# Categories Model
 class Category(models.Model):
     name = models.CharField(max_length=255)
     color = models.CharField(max_length=7)

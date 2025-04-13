@@ -21,7 +21,6 @@
             align-items: center;
         }
 
-
         a {
             text-decoration: none;
         }
@@ -46,8 +45,6 @@
             width: auto;
         }
 
-        /* Modal Styles */
-
 
         .close {
             color: #aaa;
@@ -63,7 +60,6 @@
             cursor: pointer;
         }
 
-        /* Adjusted modal header */
         h2 {
             color: var(--text);
             text-align: center;
@@ -72,7 +68,7 @@
 
         .chip {
             border-radius: 10px;
-            border-width: 2px;  /* Default border for unselected categories */
+            border-width: 2px; 
             color: aliceblue;
             border: #0000;
             font-size: large;
@@ -84,7 +80,7 @@
             margin: 4px;
             text-align: center;
             justify-content: center;
-            transition: background-color 0.3s ease; /* Smooth transition for background */
+            transition: background-color 0.3s ease; 
         }
 
         .addchip {
@@ -195,7 +191,6 @@
                         <span class="notemarktitle">{{ notemark.title }}</span>
                         <span class="notemarktext">{{ notemark.contents }}</span>
                         <div style="width: 100%;">
-                            <!-- Delete Form for Notemarks -->
                             <form action="{% url 'delete_notemark' notemark.id %}" method="POST" style="float: right;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger" style="background: transparent; border: none;">
@@ -244,17 +239,14 @@
     var closeTagModal = document.getElementById("closeTagModal");
     var openTagModalButton = document.getElementById("openTagModalButton");
 
-    // Open Category Modal (Only use openTagModalButton)
     openTagModalButton.onclick = function() {
         tagModal.style.display = "block";
     }
 
-    // Close Category Modal
     closeTagModal.onclick = function() {
         tagModal.style.display = "none";
     }
 
-    // Close Modal if clicked outside
     window.onclick = function(event) {
         if (event.target == tagModal) {
             tagModal.style.display = "none";
@@ -262,58 +254,42 @@
     }
 
 
-    // Get the current sort direction for notemarks from the query string
     let currentNotemarksSortDirection = new URLSearchParams(window.location.search).get('notemarks_sort') || 'asc';  // Default to 'asc'
 
-    // Function to toggle the sort direction for notemarks
     function toggleNotemarksSortDirection() {
-        // Toggle between 'asc' and 'desc'
         currentNotemarksSortDirection = currentNotemarksSortDirection === 'asc' ? 'desc' : 'asc';
 
-        // Update the URL to include the new sort direction for notemarks
         const url = new URL(window.location.href);
-        url.searchParams.set('notemarks_sort', currentNotemarksSortDirection);  // Set the notemarks_sort parameter
+        url.searchParams.set('notemarks_sort', currentNotemarksSortDirection); 
 
-        // Reload the page with the new sort direction
         window.location.href = url.toString();
     }
 
-    // Attach click event to the sort button for notemarks
     document.getElementById("sortNotemarksButton").addEventListener("click", toggleNotemarksSortDirection);
 
 
     
     document.addEventListener('DOMContentLoaded', function() {
-        // Select all category chips
         const tagChips = document.querySelectorAll('.chip');
-        // Loop through each chip and add a click event listener
         tagChips.forEach(chip => {
             chip.addEventListener('click', function(event) {
-                event.preventDefault();  // Prevent default link behavior (page refresh)
+                event.preventDefault(); 
 
-                // Get the category id of the clicked chip
                 const tagId = chip.dataset.tagId;
-                const currentUrl = new URL(window.location.href); // Get the current URL
+                const currentUrl = new URL(window.location.href); 
                 
-
-                // Check if this category is already in the URL as a filter
                 const currentTagParam = currentUrl.searchParams.get('tag');
                 
                 if (currentTagParam === tagId) {
-                    // If the category is already selected, remove it from the URL to "deselect"
                     currentUrl.searchParams.delete('tag');
                 } else {
-                    // Otherwise, set the selected category in the URL
                     currentUrl.searchParams.set('tag', tagId);
                 }
                 
-                // Update the URL (reloads the page)
                 window.location.href = currentUrl.toString();
             });
         });
     });
-
-
 
     </script>
     

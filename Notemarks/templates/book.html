@@ -23,8 +23,6 @@
             margin-bottom: 120px;
         }
 
-        
-
         .booktitle {
             color: var(--text);
             font-size: xx-large;
@@ -103,15 +101,12 @@
             font-size: x-large;
             width: auto;
         }
-
-        
-        /* Adjusted modal header */
+    
         h2 {
             color: var(--text);
             text-align: center;
             font-size: xx-large;
         }
-
         
         form {
             padding: 0px;
@@ -132,7 +127,7 @@
                 <span class="bookauthor">{{ book.authors }}</span>
                 <span class="bookdescription">{{ book.description }}</span>
                 <div style="width: 100%; margin-top: 20px;">
-                    <!-- Delete Form -->
+
                     <form action="{% url 'delete_book' book.id %}" method="POST" style="float: right;">
                         {% csrf_token %}
                         <button type="submit" style="background-color: #0000; border-style: none;" class="btn btn-danger">
@@ -170,7 +165,6 @@
                     </button>
                 </form>
 
-                <!-- Add Notemark Button (to open modal) -->
                 <button id="addNotemarkButton" data-book-id="{{ book.id }}" style="background-color: #0000; border-style: none; margin-left: 270px;">
                     <img class="icon" src="{% static 'images/addicon.svg' %}">
                 </button>
@@ -188,7 +182,7 @@
                         <span class="notemarktitle">{{ notemark.title }}</span>
                         <span class="notemarktext">{{ notemark.contents }}</span>
                         <div style="width: 100%;">
-                            <!-- Delete Form for Notemarks -->
+
                             <form action="{% url 'delete_notemark' notemark.id %}" method="POST" style="float: right;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger" style="background: transparent; border: none;">
@@ -210,7 +204,7 @@
     </div>
 
 
-    <!-- The Modal for Editing a Book -->
+
 <div id="editBookModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closeEditModal">&times;</span>
@@ -248,7 +242,7 @@
 </div>
 
 
-    <!-- The Modal for Adding a Notemark -->
+
     <div id="addNotemarkModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeModal">&times;</span>
@@ -304,33 +298,24 @@
     </div>
 
     <script>
-        // Get the modal
+
         var modal = document.getElementById("addNotemarkModal");
-    
-        // Get the button that opens the modal
         var btn = document.getElementById("addNotemarkButton");
-    
-        // Get the <span> element that closes the modal
         var span = document.getElementById("closeModal");
-    
-        // Get the hidden input field for the book id
         var bookIdInput = document.getElementById("book_id_input");
-    
-        // When the user clicks the button, open the modal and set the book ID
+
         btn.onclick = function() {
             var bookId = this.getAttribute("data-book-id");
             bookIdInput.value = bookId;
-            console.log("Book ID:", bookId); // Debugging line
+            console.log("Book ID:", bookId);
             modal.style.display = "block";
         }
 
     
-        // When the user clicks on <span> (x), close the modal
         span.onclick = function() {
             modal.style.display = "none";
         }
     
-        // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
@@ -338,64 +323,46 @@
         }
 
 
-
-        // Get the modal
         var editModal = document.getElementById("editBookModal");
-
-        // Get the button that opens the modal
         var editBtn = document.querySelector(".btn.btn-danger img[alt='Edit']");
-
-        // Get the <span> element that closes the modal
         var closeEditModal = document.getElementById("closeEditModal");
 
-        // When the user clicks the "Edit" button, open the modal and set the book's current details
         editBtn.onclick = function() {
             var bookTitle = "{{ book.title }}";
             var bookAuthors = "{{ book.authors }}";
             var bookDescription = "{{ book.description }}";
             var bookCoverImage = "{{ MEDIA_URL_BASE }}{{ book.cover_image }}";
             
-            // Fill the form inputs with current data
             document.getElementById("edit-title").value = bookTitle;
             document.getElementById("edit-authors").value = bookAuthors;
             document.getElementById("edit-description").value = bookDescription;
             document.getElementById("current-cover-image").src = bookCoverImage;
             
-            // Open the modal
             editModal.style.display = "block";
         }
 
-        // When the user clicks on <span> (x), close the modal
         closeEditModal.onclick = function() {
             editModal.style.display = "none";
         }
 
-        // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
             if (event.target == editModal) {
                 editModal.style.display = "none";
             }
         }
 
-        // Get the current sort direction for notemarks from the query string
     let currentNotemarksSortDirection = new URLSearchParams(window.location.search).get('notemarks_sort') || 'asc';  // Default to 'asc'
 
-    // Function to toggle the sort direction for notemarks
     function toggleNotemarksSortDirection() {
-        // Toggle between 'asc' and 'desc'
         currentNotemarksSortDirection = currentNotemarksSortDirection === 'asc' ? 'desc' : 'asc';
 
-        // Update the URL to include the new sort direction for notemarks
         const url = new URL(window.location.href);
         url.searchParams.set('notemarks_sort', currentNotemarksSortDirection);  // Set the notemarks_sort parameter
 
-        // Reload the page with the new sort direction
         window.location.href = url.toString();
     }
 
-    // Attach click event to the sort button for notemarks
     document.getElementById("sortNotemarksButton").addEventListener("click", toggleNotemarksSortDirection);
-
 
     </script>
     
