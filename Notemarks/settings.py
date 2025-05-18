@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Notemarks',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Add this line
+    'django.middleware.common.CommonMiddleware',
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Default value
@@ -137,3 +140,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/login'
 
 MEDIA_URL_BASE = 'http://localhost:8000/media/'
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True

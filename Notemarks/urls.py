@@ -39,6 +39,22 @@ urlpatterns = [
     path('add_category/', views.add_category, name='add_category'),
     path('add_tag/', views.add_tag, name='add_tag'),
     path('book/<int:book_id>/edit/', views.edit_book, name='edit_book'),
+
+    # API Endpoints
+    path('api/books/', views.apibooks, name='apibooks'),
+    path('api/login/', views.apilogin, name='apilogin'),
+    path('api/notemarks/', views.apinotemarks, name='apinotemarks'),
+    path('api/book/', views.apibook, name='apibook'),
+    path('api/create/category/', views.apiCreateCategory, name='apicreatecategory'),
+    path('api/create/book/', views.apiCreateBook, name='apicreatebook'),
+    path('api/create/tag/', views.apiCreateTag, name='apicreatetag'),
+    path('api/create/notemark/', views.apiCreateNotemark, name='apicreatenotemark'),
+    path('api/delete/notemark/', views.apiDeleteNotemark, name='apideletenotemark'),
+    path('api/delete/book/', views.apiDeleteBook, name='apideletebook'),
+    path('api/edit/book/', views.apiEditBook, name='apieditbook'),
+    path('api/profile/', views.apiProfile, name='apiprofile'),
+
+
 ]
 
 if settings.DEBUG:
