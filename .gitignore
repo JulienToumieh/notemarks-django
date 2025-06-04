@@ -10,6 +10,8 @@ dist
 build
 .eggs
 
+ngrok/
+
 # Django
 *.log
 *.pot
